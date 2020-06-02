@@ -19,5 +19,5 @@ Instance Setup
 Follow the instructions in Setup_Instance;
 
 1. NVIDIA_Externals
-2. Install_Desktop
+2. Install_Desktop (not actually needed but sometimes it's nice to have, everything does work without)
 
