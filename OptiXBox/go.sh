@@ -63,12 +63,13 @@ glm-get(){
 
 glm-get
 
-echo "OPTIX_INSTALL_DIR ${OPTIX_INSTALL_DIR}"
+echo "OPTIX_INSTALL_DIR: ${OPTIX_INSTALL_DIR}"
 
 rm -rf $bdir && mkdir -p $bdir
 cd $bdir && pwd
 ls -l
 
+echo "Running CMake"
 cmake $sdir \
    -DCMAKE_BUILD_TYPE=Debug \
    -DCMAKE_PREFIX_PATH=$prefix/externals \
