@@ -100,6 +100,6 @@ ppm=$prefix/ppm/$name.ppm
 
 echo ppm $ppm
 ls -l $ppm
-goi open $ppm    ## create an open function such as "gio open" if using gnome
+gio open $ppm    ## create an open function such as "gio open" if using gnome
 
 
