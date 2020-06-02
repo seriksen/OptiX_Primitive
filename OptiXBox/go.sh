@@ -23,13 +23,15 @@
 sdir=$(pwd)
 name=$(basename $sdir)
 
-prefix=/tmp/$USER/opticks/$name
+prefix=/tmp/$name
 
 export PREFIX=$prefix
 export PATH=$PREFIX/bin:$PATH
 
 bdir=$prefix/build
-echo bdir $bdir name $name prefix $prefix
+echo bdir $bdir
+echo name $name
+echo prefix $prefix
 
 
 
@@ -61,11 +63,7 @@ glm-get(){
 
 glm-get
 
-
-optix-install-dir(){ opticks- ; echo ${OPTIX_INSTALL_DIR:-/home/opc/OptiX/NVIDIA-OptiX-SDK-6.0.0-linux64} ; }
-
-
-echo optix-install-dir : $(optix-install-dir)
+echo OPTIX_INSTALL_DIR : ${OPTIX_INSTALL_DIR}
 
 rm -rf $bdir && mkdir -p $bdir
 cd $bdir && pwd
@@ -75,8 +73,8 @@ cmake $sdir \
    -DCMAKE_BUILD_TYPE=Debug \
    -DCMAKE_PREFIX_PATH=$prefix/externals \
    -DCMAKE_INSTALL_PREFIX=$prefix \
-   -DCMAKE_MODULE_PATH=$(optix-install-dir)/SDK/CMake \
-   -DOptiX_INSTALL_DIR=$(optix-install-dir)
+   -DCMAKE_MODULE_PATH=${OPTIX_INSTALL_DIR}/SDK/CMake \
+   -DOptiX_INSTALL_DIR=${OPTIX_INSTALL_DIR}
 
 
 rm -rf $prefix/ptx
