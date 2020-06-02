@@ -39,7 +39,7 @@ set_target_properties(ImpGLM  PROPERTIES
         )
 
 
-set(COMPUTE_CAPABILITY 70)
+set(COMPUTE_CAPABILITY ${GPU_COMPUTE_CAPABILITY})
 
 set(CUDA_NVCC_FLAGS)
 list(APPEND CUDA_NVCC_FLAGS "-Xcompiler -fPIC")
