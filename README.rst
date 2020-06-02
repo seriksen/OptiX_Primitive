@@ -20,4 +20,5 @@ Follow the instructions in Setup_Instance;
 
 1. NVIDIA_Externals
 2. Install_Desktop (not actually needed but sometimes it's nice to have, everything does work without)
-
+3. Install_NonNVIDIAExternals
+4. Add custom_setup.sh to .bashrc (add so worked when bash is called with -l)
