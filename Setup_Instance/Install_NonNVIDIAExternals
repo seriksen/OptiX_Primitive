@@ -1,0 +1,15 @@
+*********
+Externals
+*********
+
+What's needed?
+
+* CMake 3.5 +
+
+
+Install CMake
+-------------
+
+.. code-block:: sh
+
+    sudo yum install cmake
