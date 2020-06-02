@@ -63,7 +63,7 @@ glm-get(){
 
 glm-get
 
-echo OPTIX_INSTALL_DIR : ${OPTIX_INSTALL_DIR}
+echo "OPTIX_INSTALL_DIR ${OPTIX_INSTALL_DIR}"
 
 rm -rf $bdir && mkdir -p $bdir
 cd $bdir && pwd
