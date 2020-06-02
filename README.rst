@@ -31,4 +31,6 @@ Follow the instructions in Setup_Instance;
 OptiX Primitives
 ----------------
 
-
+.. image:: ./OptiXBox/Output/ppm/OptiXBox.ppm
+  :width: 400
+  :alt: Alternative text
