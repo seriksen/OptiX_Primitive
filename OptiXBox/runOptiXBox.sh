@@ -23,7 +23,7 @@
 sdir=$(pwd)
 name=$(basename $sdir)
 
-prefix=/tmp/$name
+prefix=${sdir}/Output
 
 export PREFIX=$prefix
 export PATH=$PREFIX/bin:$PATH
