@@ -32,5 +32,3 @@ OptiX Primitives
 ----------------
 
 
-
-
