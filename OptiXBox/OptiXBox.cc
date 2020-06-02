@@ -142,7 +142,7 @@ void SPPM_write( const char* filename, const unsigned char* image, int width, in
 int main(int argc, char** argv)
 {
 
-  const char* name = "UseOptiXGeometryStandalone" ;
+  const char* name = "OptiXBox" ;
   const char* prefix = getenv("PREFIX");
   assert( prefix && "expecting PREFIX envvar pointing to writable directory" );
 
