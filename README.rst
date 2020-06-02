@@ -30,7 +30,20 @@ Follow the instructions in Setup_Instance;
 
 OptiX Primitives
 ----------------
+There are two Primitives shown in this repository.
 
-.. image:: ./OptiXBox/Output/ppm/OptiXBox.ppm
-  :width: 400
-  :alt: Alternative text
+1. Box (OptiXBox)
+2. Cylinder
+
+Run scripts are in the directories
+
+OptiXBox
+~~~~~~~~
+This has been copied from Opticks (TODO: add link).
+
+The expected output is OptiXBox.ppm
+
+OptiXCylinder
+~~~~~~~~~~~~~
+
+
