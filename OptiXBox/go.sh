@@ -62,7 +62,7 @@ glm-get(){
 glm-get
 
 
-optix-install-dir(){ opticks- ; echo ${OPTIX_INSTALL_DIR:-$(opticks-dir)/externals/OptiX} ; }
+optix-install-dir(){ opticks- ; echo ${OPTIX_INSTALL_DIR:-/home/opc/OptiX/NVIDIA-OptiX-SDK-6.0.0-linux64} ; }
 
 
 echo optix-install-dir : $(optix-install-dir)
