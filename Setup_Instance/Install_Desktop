@@ -18,8 +18,8 @@ Connect to instance
 
 1. Add ssh key to OCI console under 'Console Connections'.
 2. Copy VNC Connection into terminal
-3. Connect by 'localhost:5900'
-4. Start desktop 'sudo systemctl isolate graphical.target'
+3. Connect by :code:`localhost:5900`
+4. Start desktop :code:`sudo systemctl isolate graphical.target`
 
 
 
