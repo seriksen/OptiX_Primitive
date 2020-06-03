@@ -188,8 +188,8 @@ int main(int argc, char** argv)
 
 
   box->setPrimitiveCount( 1u );
-  box->setBoundingBoxProgram( context->createProgramFromPTXFile( box_ptx , "box_bounds" ) );
-  box->setIntersectionProgram( context->createProgramFromPTXFile( box_ptx , "box_intersect" ) ) ;
+  box->setBoundingBoxProgram( context->createProgramFromPTXFile( box_ptx , "bounds" ) );
+  box->setIntersectionProgram( context->createProgramFromPTXFile( box_ptx , "intersect_sphere" ) ) ;
 
   float sz = ce.w ;
   box["boxmin"]->setFloat( -sz/2.f, -sz/2.f, -sz/2.f );
