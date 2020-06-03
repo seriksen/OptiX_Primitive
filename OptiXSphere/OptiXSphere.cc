@@ -142,7 +142,7 @@ void SPPM_write( const char* filename, const unsigned char* image, int width, in
 int main(int argc, char** argv)
 {
 
-  const char* name = "OptiXBox" ;
+  const char* name = "OptiXSphere" ;
   const char* prefix = getenv("PREFIX");
   assert( prefix && "expecting PREFIX envvar pointing to writable directory" );
 
@@ -176,29 +176,29 @@ int main(int argc, char** argv)
   context->setRayGenerationProgram( entry_point_index, context->createProgramFromPTXFile( ptx , "raygen" ));
   context->setMissProgram(   entry_point_index, context->createProgramFromPTXFile( ptx , "miss" ));
 
-  const char* box_ptx = PTXPath( prefix, cmake_target, "box" ) ;
+  const char* sphere_ptx = PTXPath( prefix, cmake_target, "sphere" ) ;
 
 
 
-  optix::Geometry box ;
-  assert( box.get() == NULL );
+  optix::Geometry sphere ;
+  assert( sphere.get() == NULL );
 
-  box = context->createGeometry();
-  assert( box.get() != NULL );
+  sphere = context->createGeometry();
+  assert( sphere.get() != NULL );
 
 
-  box->setPrimitiveCount( 1u );
-  box->setBoundingBoxProgram( context->createProgramFromPTXFile( box_ptx , "box_bounds" ) );
-  box->setIntersectionProgram( context->createProgramFromPTXFile( box_ptx , "box_intersect" ) ) ;
+  sphere->setPrimitiveCount( 1u );
+  sphere->setBoundingBoxProgram( context->createProgramFromPTXFile( sphere_ptx , "sphere_bounds" ) );
+  sphere->setIntersectionProgram( context->createProgramFromPTXFile( sphere_ptx , "sphere_intersect" ) ) ;
 
   float sz = ce.w ;
-  box["boxmin"]->setFloat( -sz/2.f, -sz/2.f, -sz/2.f );
-  box["boxmax"]->setFloat(  sz/2.f,  sz/2.f,  sz/2.f );
+  sphere["spheremin"]->setFloat( -sz/2.f, -sz/2.f, -sz/2.f );
+  sphere["spheremax"]->setFloat(  sz/2.f,  sz/2.f,  sz/2.f );
 
-  optix::Material box_mat = context->createMaterial();
-  box_mat->setClosestHitProgram( entry_point_index, context->createProgramFromPTXFile( ptx, "closest_hit_radiance0" ));
+  optix::Material sphere_mat = context->createMaterial();
+  sphere_mat->setClosestHitProgram( entry_point_index, context->createProgramFromPTXFile( ptx, "closest_hit_radiance0" ));
 
-  optix::GeometryInstance gi = context->createGeometryInstance( box, &box_mat, &box_mat+1 ) ;
+  optix::GeometryInstance gi = context->createGeometryInstance( sphere, &sphere_mat, &sphere_mat+1 ) ;
   optix::GeometryGroup gg = context->createGeometryGroup();
   gg->setChildCount(1);
   gg->setChild( 0, gi );
