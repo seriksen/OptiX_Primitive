@@ -32,15 +32,6 @@ static __device__ __inline__ optix::uchar4 make_color(const optix::float3& c)
                              255u);                                                 // A
 }
 
-/*
-static __device__ __inline__ optix::uchar4 make_color(const optix::float4& c)
-{
-    return optix::make_uchar4( static_cast<unsigned char>(__saturatef(c.z)*255.99f),  // B
-                               static_cast<unsigned char>(__saturatef(c.y)*255.99f),  // G
-                               static_cast<unsigned char>(__saturatef(c.x)*255.99f),  // R
-                               static_cast<unsigned char>(__saturatef(c.w)*255.99f));  // A
-}
-*/
 
 
 struct PerRayData_radiance

@@ -32,16 +32,6 @@ static __device__ __inline__ optix::uchar4 make_color(const optix::float3& c)
                              255u);                                                 // A
 }
 
-/*
-static __device__ __inline__ optix::uchar4 make_color(const optix::float4& c)
-{
-    return optix::make_uchar4( static_cast<unsigned char>(__saturatef(c.z)*255.99f),  // B
-                               static_cast<unsigned char>(__saturatef(c.y)*255.99f),  // G
-                               static_cast<unsigned char>(__saturatef(c.x)*255.99f),  // R
-                               static_cast<unsigned char>(__saturatef(c.w)*255.99f));  // A
-}
-*/
-
 
 struct PerRayData_radiance
 {
@@ -90,10 +80,16 @@ RT_PROGRAM void raygen()
   // make_uchar4(  255u, 0u, 0u,255u) ;  // red  (was expecting BGRA get RGBA)
 }
 
+
+// Executed whenever OptiX finds the closest intersection between a ray and an
+// object.
 // Returns shading normal as the surface shading result
+// See box.cu for shading_normal
 RT_PROGRAM void closest_hit_radiance0()
 {
-  prd_radiance.result = normalize(rtTransformNormal(RT_OBJECT_TO_WORLD, shading_normal))*0.5f + 0.5f;
+  prd_radiance.result =
+      normalize(rtTransformNormal(RT_OBJECT_TO_WORLD, shading_normal))
+          * 0.5f + 0.5f;
 }
 
 RT_PROGRAM void miss()
