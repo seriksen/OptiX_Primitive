@@ -17,19 +17,6 @@
  * limitations under the License.
  */
 
-/**
-UseOptiXGeometry
-===================
-
-Minimally demonstrate OptiX geometry without using OXRAP.
-
-* "standalone" ray traces a box using a normal shader
-
-
-**/
-
-
-
 #include <cstdlib>
 #include <cstring>
 #include <sstream>
@@ -142,7 +129,7 @@ void SPPM_write( const char* filename, const unsigned char* image, int width, in
 int main(int argc, char** argv)
 {
 
-  const char* name = "OptiXSphere" ;
+  const char* name = "OptiXBox" ;
   const char* prefix = getenv("PREFIX");
   assert( prefix && "expecting PREFIX envvar pointing to writable directory" );
 
@@ -176,7 +163,7 @@ int main(int argc, char** argv)
   context->setRayGenerationProgram( entry_point_index, context->createProgramFromPTXFile( ptx , "raygen" ));
   context->setMissProgram(   entry_point_index, context->createProgramFromPTXFile( ptx , "miss" ));
 
-  const char* box_ptx = PTXPath( prefix, cmake_target, "sphere" ) ;
+  const char* box_ptx = PTXPath( prefix, cmake_target, "box" ) ;
 
 
 
@@ -188,9 +175,8 @@ int main(int argc, char** argv)
 
 
   box->setPrimitiveCount( 1u );
-  box->setBoundingBoxProgram( context->createProgramFromPTXFile( box_ptx , "bounds" ) );
-  box->setIntersectionProgram( context->createProgramFromPTXFile( box_ptx , "intersect" ) ) ;
-  box->setIntersectionProgram( context->createProgramFromPTXFile( box_ptx, "robust_intersect") );
+  box->setBoundingBoxProgram( context->createProgramFromPTXFile( box_ptx , "box_bounds" ) );
+  box->setIntersectionProgram( context->createProgramFromPTXFile( box_ptx , "box_intersect" ) ) ;
 
   float sz = ce.w ;
   box["boxmin"]->setFloat( -sz/2.f, -sz/2.f, -sz/2.f );

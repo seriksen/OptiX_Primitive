@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-set(name OptiXSphere)
+set(name OptiXBox)
 project(${name})
 
 #[=[
@@ -58,7 +58,7 @@ set(SOURCES
 
 set(OPTIX_SOURCES
         ${name}.cu
-        sphere.cu
+        cylinder.cu
         )
 
 CUDA_WRAP_SRCS( ${name} PTX _generated_PTX_files ${OPTIX_SOURCES} )
