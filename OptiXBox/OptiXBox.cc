@@ -120,7 +120,8 @@ void SPPM_write(const char *filename, const unsigned char *image, int width,
   delete[] data;
 }
 
-optix::Material createMaterial(const char *name, const char* prefix,
+optix::Material createMaterial(optix::Context context,
+                               const char *name, const char* prefix,
                                const char *cmake_target,
                                const char *closest_hit)
 {
@@ -228,7 +229,7 @@ int main(int argc, char **argv) {
   context->setMissProgram(entry_point_index,
                           context->createProgramFromPTXFile(ptx, "miss"));
 
-  optix::Material material = createMaterial(name, prefix, cmake_target,
+  optix::Material material = createMaterial(context, name, prefix, cmake_target,
                                             "closest_hit_radiance0");
 
   optix::GeometryInstance gi = createBox(context, material, prefix,
