@@ -120,6 +120,55 @@ void SPPM_write(const char *filename, const unsigned char *image, int width,
   delete[] data;
 }
 
+
+optix::GeometryInstance createBox(optix::Context context,
+                                  optix::Material material,
+                                  const char* prefix,
+                                  const char *cmake_target,
+                                  unsigned entry_point_index,
+                                  glm::vec4 ce)
+{
+
+  // Get PTX geometry path
+  const char *box_ptx = PTXPath(prefix, cmake_target, "box");
+
+  optix::Geometry box;
+  assert(box.get() == NULL);
+
+  box = context->createGeometry();
+  assert(box.get() != NULL);
+
+  // The box geometry only has one primitive = box.cu
+  box->setPrimitiveCount(1u);
+
+  // Get box primitive bounds from PTX file
+  // See box_bounds in box.cu
+  box->setBoundingBoxProgram(
+      context->createProgramFromPTXFile(box_ptx, "box_bounds"));
+
+  // Get box primitive intersection from PTX file
+  // See box_intersect in box.cu
+  box->setIntersectionProgram(
+      context->createProgramFromPTXFile(box_ptx, "box_intersect"));
+
+  // Set box size
+  float sz = ce.w;
+  box["boxmin"]->setFloat(-sz / 2.f, -sz / 2.f, -sz / 2.f);
+  box["boxmax"]->setFloat(sz / 2.f, sz / 2.f, sz / 2.f);
+
+  optix::Material box_mat = context->createMaterial();
+  box_mat->setClosestHitProgram(
+      entry_point_index,
+      context->createProgramFromPTXFile(ptx, "closest_hit_radiance0"));
+
+  // Put it all together
+  optix::GeometryInstance gi =
+      context->createGeometryInstance(box, &box_mat, &box_mat + 1);
+
+  return gi;
+}
+
+
 int main(int argc, char **argv) {
 
   // Set/Get names
@@ -170,45 +219,9 @@ int main(int argc, char **argv) {
   context->setMissProgram(entry_point_index,
                           context->createProgramFromPTXFile(ptx, "miss"));
 
-  // --------------- \\
-  // Define geometry \\
-  // See box.cu      \\
-  // --------------- \\
-  // Get PTX geometry path
-  const char *box_ptx = PTXPath(prefix, cmake_target, "box");
+  optix::GeometryInstance gi = createBox(optix::Context context,
+      optix::Material material, prefix,cmake_target, entry_point_index, ce);
 
-  optix::Geometry box;
-  assert(box.get() == NULL);
-
-  box = context->createGeometry();
-  assert(box.get() != NULL);
-
-  // The box geometry only has one primitive = box.cu
-  box->setPrimitiveCount(1u);
-
-  // Get box primitive bounds from PTX file
-  // See box_bounds in box.cu
-  box->setBoundingBoxProgram(
-      context->createProgramFromPTXFile(box_ptx, "box_bounds"));
-
-  // Get box primitive intersection from PTX file
-  // See box_intersect in box.cu
-  box->setIntersectionProgram(
-      context->createProgramFromPTXFile(box_ptx, "box_intersect"));
-
-  // Set box size
-  float sz = ce.w;
-  box["boxmin"]->setFloat(-sz / 2.f, -sz / 2.f, -sz / 2.f);
-  box["boxmax"]->setFloat(sz / 2.f, sz / 2.f, sz / 2.f);
-
-  optix::Material box_mat = context->createMaterial();
-  box_mat->setClosestHitProgram(
-      entry_point_index,
-      context->createProgramFromPTXFile(ptx, "closest_hit_radiance0"));
-
-  // Put it all together
-  optix::GeometryInstance gi =
-      context->createGeometryInstance(box, &box_mat, &box_mat + 1);
   optix::GeometryGroup gg = context->createGeometryGroup();
   gg->setChildCount(1);
   gg->setChild(0, gi);
