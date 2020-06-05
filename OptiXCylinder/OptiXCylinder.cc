@@ -30,7 +30,8 @@
 
 
 // Composition::getEyeUVW and examples/UseGeometryShader:getMVP
-void getEyeUVW(const glm::vec4& ce, const unsigned width, const unsigned height, glm::vec3& eye, glm::vec3& U, glm::vec3& V, glm::vec3& W )
+void getEyeUVW(const glm::vec4& ce, const unsigned width, const unsigned height,
+               glm::vec3& eye, glm::vec3& U, glm::vec3& V, glm::vec3& W )
 {
   glm::vec3 tr(ce.x, ce.y, ce.z);  // ce is center-extent of model
   glm::vec3 sc(ce.w);
@@ -67,8 +68,16 @@ void getEyeUVW(const glm::vec4& ce, const unsigned width, const unsigned height,
   eye = eye_ ;
 }
 
-
-const char* PTXPath( const char* install_prefix, const char* cmake_target, const char* cu_stem, const char* cu_ext=".cu" )
+/**
+ * @brief Get path of PTX file
+ * @param install_prefix
+ * @param cmake_target
+ * @param cu_stem
+ * @param cu_ext .cu
+ * @return path to PTX
+ */
+const char* PTXPath( const char* install_prefix, const char* cmake_target,
+                    const char* cu_stem, const char* cu_ext=".cu" )
 {
   std::stringstream ss ;
   ss << install_prefix
@@ -125,17 +134,23 @@ void SPPM_write( const char* filename, const unsigned char* image, int width, in
 
 
 
-
+/**
+ * @brief Assumes PTX files have been generated before this.
+ * @param argc
+ * @param argv
+ * @return
+ */
 int main(int argc, char** argv)
 {
 
+  // Set/Get names
   const char* name = "OptiXCylinder" ;
   const char* prefix = getenv("PREFIX");
   assert( prefix && "expecting PREFIX envvar pointing to writable directory" );
 
   const char* cmake_target = name ;
 
-
+  // Set image size
   unsigned width = 1024u ;
   unsigned height = 768 ;
 
@@ -150,6 +165,7 @@ int main(int argc, char** argv)
 
   optix::Context context = optix::Context::create();
 
+  // Only need one type of array as only care about radiance not shadows
   context->setRayTypeCount(1);
 
   context->setPrintEnabled(true);
@@ -159,13 +175,21 @@ int main(int argc, char** argv)
 
   unsigned entry_point_index = 0u ;
 
+  // Get PTX file location
   const char* ptx = PTXPath( prefix, cmake_target, name ) ;
-  context->setRayGenerationProgram( entry_point_index, context->createProgramFromPTXFile( ptx , "raygen" ));
-  context->setMissProgram(   entry_point_index, context->createProgramFromPTXFile( ptx , "miss" ));
 
+  // Get Ray Generation from PTX file
+  // See raygen in OptiXCylinder.cu
+  context->setRayGenerationProgram(
+      entry_point_index, context->createProgramFromPTXFile( ptx , "raygen" ));
+
+  // Get Miss from PTX file
+  // See miss in OptiXCylinder.cu
+  context->setMissProgram(
+      entry_point_index, context->createProgramFromPTXFile( ptx , "miss" ));
+
+  // Get geometry path
   const char* box_ptx = PTXPath( prefix, cmake_target, "cylinder" ) ;
-
-
 
   optix::Geometry box ;
   assert( box.get() == NULL );
