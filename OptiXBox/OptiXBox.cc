@@ -121,7 +121,9 @@ void SPPM_write(const char *filename, const unsigned char *image, int width,
 }
 
 optix::Context createContext(unsigned entry_point_index,
-                             const char* ptx)
+                             const char* ptx,
+                             const char* raygen,
+                             const char* miss)
 {
   optix::Context context = optix::Context::create();
 
@@ -134,32 +136,24 @@ optix::Context createContext(unsigned entry_point_index,
   context->setPrintBufferSize(4096);
   context->setEntryPointCount(1);
 
-
-
-  //
-  // Define Ray Behaviour
-  // Get PTX file location for ray programs
-
-
   // Get Ray Generation from PTX file
   // See raygen in OptiXBox.cu
   context->setRayGenerationProgram(
-      entry_point_index, context->createProgramFromPTXFile(ptx, "raygen"));
+      entry_point_index, context->createProgramFromPTXFile(ptx, raygen));
 
   // Get Miss from PTX file
   // See miss in OptiXBox.cu
   context->setMissProgram(entry_point_index,
-                          context->createProgramFromPTXFile(ptx, "miss"));
+                          context->createProgramFromPTXFile(ptx, miss));
 
 }
 
 optix::Material createMaterial(optix::Context context,
-                               const char *name, const char* prefix,
-                               const char *cmake_target,
+                               const char  *ptx,
                                const char *closest_hit,
-                               unsigned entry_point_index)
+                               unsigned entry_point_index
+                               )
 {
-  const char *ptx = PTXPath(prefix, cmake_target, name);
   optix::Material mat = context->createMaterial();
   mat->setClosestHitProgram(
       entry_point_index,
@@ -171,16 +165,10 @@ optix::Material createMaterial(optix::Context context,
 
 optix::GeometryInstance createBox(optix::Context context,
                                   optix::Material material,
-                                  const char* prefix,
-                                  const char *cmake_target,
-                                  unsigned entry_point_index,
                                   glm::vec4 ce,
-                                  const char *ptx)
+                                  const char *ptx,
+                                  const char* primitive_ptx)
 {
-
-  // Get PTX geometry path
-  const char *box_ptx = PTXPath(prefix, cmake_target, "box");
-
   optix::Geometry box;
   assert(box.get() == NULL);
 
@@ -193,12 +181,12 @@ optix::GeometryInstance createBox(optix::Context context,
   // Get box primitive bounds from PTX file
   // See box_bounds in box.cu
   box->setBoundingBoxProgram(
-      context->createProgramFromPTXFile(box_ptx, "bounds"));
+      context->createProgramFromPTXFile(primitive_ptx, "bounds"));
 
   // Get box primitive intersection from PTX file
   // See box_intersect in box.cu
   box->setIntersectionProgram(
-      context->createProgramFromPTXFile(box_ptx, "intersect"));
+      context->createProgramFromPTXFile(primitive_ptx, "intersect"));
 
   // Set box size
   float sz = ce.w;
@@ -237,16 +225,16 @@ int main(int argc, char **argv) {
 
   unsigned entry_point_index = 0u;
   const char *ptx = PTXPath(prefix, cmake_target, name);
-  const char *primitive_ptx = PTXPath(PTXPath(prefix, cmake_target, primitive);
+  const char *primitive_ptx = PTXPath(prefix, cmake_target, primitive);
 
   optix::Context context = createContext(entry_point_index, ptx);
 
-  optix::Material material = createMaterial(context, name, prefix, cmake_target,
-                                            "closest_hit_radiance0", entry_point_index);
+  optix::Material material = createMaterial(context, ptx,
+                                            "closest_hit_radiance0",
+                                            entry_point_index);
 
-  optix::GeometryInstance gi = createBox(context, material, prefix,
-                                         cmake_target, entry_point_index, ce,
-                                         ptx);
+  optix::GeometryInstance gi = createBox(context, material, ce, ptx,
+                                         primitive_ptx);
 
 
   optix::GeometryGroup gg = context->createGeometryGroup();
