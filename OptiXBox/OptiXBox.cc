@@ -126,7 +126,8 @@ optix::GeometryInstance createBox(optix::Context context,
                                   const char* prefix,
                                   const char *cmake_target,
                                   unsigned entry_point_index,
-                                  glm::vec4 ce)
+                                  glm::vec4 ce,
+                                  const char *ptx)
 {
 
   // Get PTX geometry path
@@ -220,7 +221,8 @@ int main(int argc, char **argv) {
                           context->createProgramFromPTXFile(ptx, "miss"));
 
   optix::GeometryInstance gi = createBox(optix::Context context,
-      optix::Material material, prefix,cmake_target, entry_point_index, ce);
+      optix::Material material, prefix, cmake_target, entry_point_index,
+                                         ce, ptx);
 
   optix::GeometryGroup gg = context->createGeometryGroup();
   gg->setChildCount(1);
