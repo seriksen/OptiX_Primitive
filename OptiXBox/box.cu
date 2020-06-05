@@ -69,7 +69,7 @@ static __device__ float3 boxnormal(float t, float3 t0, float3 t1)
 }
 
 // Define what is an intersection of the box
-RT_PROGRAM void box_intersect(int)
+RT_PROGRAM void intersect(int)
 {
   // Declare local variables
   float3 t0 = (boxmin - ray.origin)/ray.direction;
@@ -97,7 +97,7 @@ RT_PROGRAM void box_intersect(int)
   }
 }
 
-RT_PROGRAM void box_bounds (int, float result[6])
+RT_PROGRAM void bounds (int, float result[6])
 {
   optix::Aabb* aabb = (optix::Aabb*)result;
   aabb->set(boxmin, boxmax);

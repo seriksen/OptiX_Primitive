@@ -120,6 +120,39 @@ void SPPM_write(const char *filename, const unsigned char *image, int width,
   delete[] data;
 }
 
+optix::Context createContext(unsigned entry_point_index,
+                             const char* ptx)
+{
+  optix::Context context = optix::Context::create();
+
+  // Only need one type of array as only care about radiance
+  // Only need radiance ray
+  context->setRayTypeCount(1);
+
+  context->setPrintEnabled(true);
+  // context->setPrintLaunchIndex(5,0,0);
+  context->setPrintBufferSize(4096);
+  context->setEntryPointCount(1);
+
+
+
+  //
+  // Define Ray Behaviour
+  // Get PTX file location for ray programs
+
+
+  // Get Ray Generation from PTX file
+  // See raygen in OptiXBox.cu
+  context->setRayGenerationProgram(
+      entry_point_index, context->createProgramFromPTXFile(ptx, "raygen"));
+
+  // Get Miss from PTX file
+  // See miss in OptiXBox.cu
+  context->setMissProgram(entry_point_index,
+                          context->createProgramFromPTXFile(ptx, "miss"));
+
+}
+
 optix::Material createMaterial(optix::Context context,
                                const char *name, const char* prefix,
                                const char *cmake_target,
@@ -160,12 +193,12 @@ optix::GeometryInstance createBox(optix::Context context,
   // Get box primitive bounds from PTX file
   // See box_bounds in box.cu
   box->setBoundingBoxProgram(
-      context->createProgramFromPTXFile(box_ptx, "box_bounds"));
+      context->createProgramFromPTXFile(box_ptx, "bounds"));
 
   // Get box primitive intersection from PTX file
   // See box_intersect in box.cu
   box->setIntersectionProgram(
-      context->createProgramFromPTXFile(box_ptx, "box_intersect"));
+      context->createProgramFromPTXFile(box_ptx, "intersect"));
 
   // Set box size
   float sz = ce.w;
@@ -184,6 +217,7 @@ int main(int argc, char **argv) {
 
   // Set/Get names
   const char *name = "OptiXBox";
+  const char *primitive = "box";
   const char *prefix = getenv("PREFIX");
   assert(prefix && "expecting PREFIX envvar pointing to writable directory");
 
@@ -201,34 +235,11 @@ int main(int argc, char **argv) {
   glm::vec3 W;
   getEyeUVW(ce, width, height, eye, U, V, W);
 
-  optix::Context context = optix::Context::create();
-
-  // Only need one type of array as only care about radiance
-  // Only need radiance ray
-  context->setRayTypeCount(1);
-
-  context->setPrintEnabled(true);
-  // context->setPrintLaunchIndex(5,0,0);
-  context->setPrintBufferSize(4096);
-  context->setEntryPointCount(1);
-
   unsigned entry_point_index = 0u;
-
-  // -------------------- \\
-  // Define Ray Behaviour \\
-  // -------------------- \\
-  // Get PTX file location for ray programs
   const char *ptx = PTXPath(prefix, cmake_target, name);
+  const char *primitive_ptx = PTXPath(PTXPath(prefix, cmake_target, primitive);
 
-  // Get Ray Generation from PTX file
-  // See raygen in OptiXBox.cu
-  context->setRayGenerationProgram(
-      entry_point_index, context->createProgramFromPTXFile(ptx, "raygen"));
-
-  // Get Miss from PTX file
-  // See miss in OptiXBox.cu
-  context->setMissProgram(entry_point_index,
-                          context->createProgramFromPTXFile(ptx, "miss"));
+  optix::Context context = createContext(entry_point_index, ptx);
 
   optix::Material material = createMaterial(context, name, prefix, cmake_target,
                                             "closest_hit_radiance0", entry_point_index);
