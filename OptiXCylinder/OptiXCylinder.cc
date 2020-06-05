@@ -163,7 +163,7 @@ int main(int argc, char** argv)
   context->setRayGenerationProgram( entry_point_index, context->createProgramFromPTXFile( ptx , "raygen" ));
   context->setMissProgram(   entry_point_index, context->createProgramFromPTXFile( ptx , "miss" ));
 
-  const char* box_ptx = PTXPath( prefix, cmake_target, "box" ) ;
+  const char* box_ptx = PTXPath( prefix, cmake_target, "cylinder" ) ;
 
 
 
