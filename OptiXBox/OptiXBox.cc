@@ -146,6 +146,8 @@ optix::Context createContext(unsigned entry_point_index,
   context->setMissProgram(entry_point_index,
                           context->createProgramFromPTXFile(ptx, miss));
 
+  return context;
+
 }
 
 optix::Material createMaterial(optix::Context context,
