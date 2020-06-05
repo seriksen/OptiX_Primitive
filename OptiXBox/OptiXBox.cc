@@ -120,6 +120,19 @@ void SPPM_write(const char *filename, const unsigned char *image, int width,
   delete[] data;
 }
 
+optix::Material createMaterial(const char *name, const char* prefix,
+                               const char *cmake_target,
+                               const char *closest_hit)
+{
+  const char *ptx = PTXPath(prefix, cmake_target, name);
+  optix::Material mat = context->createMaterial();
+  mat->setClosestHitProgram(
+      entry_point_index,
+      context->createProgramFromPTXFile(ptx, closest_hit));
+
+  return mat
+}
+
 
 optix::GeometryInstance createBox(optix::Context context,
                                   optix::Material material,
@@ -156,11 +169,6 @@ optix::GeometryInstance createBox(optix::Context context,
   float sz = ce.w;
   box["boxmin"]->setFloat(-sz / 2.f, -sz / 2.f, -sz / 2.f);
   box["boxmax"]->setFloat(sz / 2.f, sz / 2.f, sz / 2.f);
-
-  optix::Material box_mat = context->createMaterial();
-  box_mat->setClosestHitProgram(
-      entry_point_index,
-      context->createProgramFromPTXFile(ptx, "closest_hit_radiance0"));
 
   // Put it all together
   optix::GeometryInstance gi =
@@ -220,9 +228,13 @@ int main(int argc, char **argv) {
   context->setMissProgram(entry_point_index,
                           context->createProgramFromPTXFile(ptx, "miss"));
 
+  optix::Material material = createMaterial(name, prefix, cmake_target,
+                                            "closest_hit_radiance0");
+
   optix::GeometryInstance gi = createBox(context, material, prefix,
                                          cmake_target, entry_point_index, ce,
                                          ptx);
+
 
   optix::GeometryGroup gg = context->createGeometryGroup();
   gg->setChildCount(1);
