@@ -234,6 +234,10 @@ int main(int argc, char** argv)
 
   context->launch( entry_point_index , width, height  );
 
+  // ------------  \\
+  // Write Out PPM \\
+  // ------------- \\
+  //
   const char* path = PPMPath( prefix, name );
   std::cout << "write " << path << std::endl ;
 
