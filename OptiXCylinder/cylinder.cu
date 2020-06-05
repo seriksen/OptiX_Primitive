@@ -19,8 +19,11 @@ static __device__ float3 boxnormal(float t, float3 t0, float3 t1)
   return pos-neg;
 }
 
-RT_PROGRAM void box_intersect(int)
+// cylinder intersection
+// Following intersection maths described ub RTCD - Christer Ericson
+RT_PROGRAM void cylinder_intersect(int)
 {
+  //float d =
   float3 t0 = (boxmin - ray.origin)/ray.direction;
   float3 t1 = (boxmax - ray.origin)/ray.direction;
   float3 near = fminf(t0, t1);

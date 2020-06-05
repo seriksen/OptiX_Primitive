@@ -41,9 +41,7 @@ struct PerRayData_radiance
   int depth;
 };
 
-
-
-
+// Ray Tracing variables
 rtDeclareVariable(float3,        eye, , );
 rtDeclareVariable(float3,        U, , );
 rtDeclareVariable(float3,        V, , );
@@ -57,8 +55,6 @@ rtDeclareVariable(uint2, launch_dim,   rtLaunchDim, );
 rtDeclareVariable(rtObject,      top_object, , );
 
 rtBuffer<uchar4, 2>   output_buffer;
-
-
 
 rtDeclareVariable(float3, shading_normal,   attribute shading_normal, );
 rtDeclareVariable(PerRayData_radiance, prd_radiance, rtPayload, );

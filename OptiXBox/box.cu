@@ -67,6 +67,7 @@ static __device__ float3 boxnormal(float t, float3 t0, float3 t1)
   return pos-neg;
 }
 
+// Define what is an intersection of the box
 RT_PROGRAM void box_intersect(int)
 {
   float3 t0 = (boxmin - ray.origin)/ray.direction;
