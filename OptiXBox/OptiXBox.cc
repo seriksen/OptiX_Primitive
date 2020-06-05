@@ -220,9 +220,9 @@ int main(int argc, char **argv) {
   context->setMissProgram(entry_point_index,
                           context->createProgramFromPTXFile(ptx, "miss"));
 
-  optix::GeometryInstance gi = createBox(optix::Context context,
-      optix::Material material, prefix, cmake_target, entry_point_index,
-                                         ce, ptx);
+  optix::GeometryInstance gi = createBox(context, material, prefix,
+                                         cmake_target, entry_point_index, ce,
+                                         ptx);
 
   optix::GeometryGroup gg = context->createGeometryGroup();
   gg->setChildCount(1);
