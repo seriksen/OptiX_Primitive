@@ -5,6 +5,7 @@
 
 using namespace optix;
 
+// Communication Variables
 rtDeclareVariable(float3, boxmin, , );
 rtDeclareVariable(float3, boxmax, , );
 rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
@@ -49,7 +50,7 @@ RT_PROGRAM void cylinder_intersect(int)
   }
 }
 
-RT_PROGRAM void box_bounds (int, float result[6])
+RT_PROGRAM void cylinder_bounds (int, float result[6])
 {
   optix::Aabb* aabb = (optix::Aabb*)result;
   aabb->set(boxmin, boxmax);

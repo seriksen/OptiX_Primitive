@@ -189,27 +189,29 @@ int main(int argc, char** argv)
       entry_point_index, context->createProgramFromPTXFile( ptx , "miss" ));
 
   // Get geometry path
-  const char* box_ptx = PTXPath( prefix, cmake_target, "cylinder" ) ;
+  const char* cylinder_ptx = PTXPath( prefix, cmake_target, "cylinder" ) ;
 
-  optix::Geometry box ;
-  assert( box.get() == NULL );
+  optix::Geometry cylinder ;
+  assert( cylinder.get() == NULL );
 
-  box = context->createGeometry();
-  assert( box.get() != NULL );
+  cylinder = context->createGeometry();
+  assert( cylinder.get() != NULL );
 
 
-  box->setPrimitiveCount( 1u );
-  box->setBoundingBoxProgram( context->createProgramFromPTXFile( box_ptx , "box_bounds" ) );
-  box->setIntersectionProgram( context->createProgramFromPTXFile( box_ptx , "cylinder_intersect" ) ) ;
+  cylinder->setPrimitiveCount( 1u );
+  cylinder->setBoundingBoxProgram(
+      context->createProgramFromPTXFile( cylinder_ptx , "cylinder_bounds" ) );
+  cylinder->setIntersectionProgram(
+      context->createProgramFromPTXFile( cylinder_ptx , "cylinder_intersect" ) ) ;
 
   float sz = ce.w ;
-  box["boxmin"]->setFloat( -sz/2.f, -sz/2.f, -sz/2.f );
-  box["boxmax"]->setFloat(  sz/2.f,  sz/2.f,  sz/2.f );
+  cylinder["boxmin"]->setFloat( -sz/2.f, -sz/2.f, -sz/2.f );
+  cylinder["boxmax"]->setFloat(  sz/2.f,  sz/2.f,  sz/2.f );
 
-  optix::Material box_mat = context->createMaterial();
-  box_mat->setClosestHitProgram( entry_point_index, context->createProgramFromPTXFile( ptx, "closest_hit_radiance0" ));
+  optix::Material cylinder_mat = context->createMaterial();
+  cylinder_mat->setClosestHitProgram( entry_point_index, context->createProgramFromPTXFile( ptx, "closest_hit_radiance0" ));
 
-  optix::GeometryInstance gi = context->createGeometryInstance( box, &box_mat, &box_mat+1 ) ;
+  optix::GeometryInstance gi = context->createGeometryInstance( cylinder, &cylinder_mat, &cylinder_mat+1 ) ;
   optix::GeometryGroup gg = context->createGeometryGroup();
   gg->setChildCount(1);
   gg->setChild( 0, gi );
