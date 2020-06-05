@@ -227,7 +227,8 @@ int main(int argc, char **argv) {
   const char *ptx = PTXPath(prefix, cmake_target, name);
   const char *primitive_ptx = PTXPath(prefix, cmake_target, primitive);
 
-  optix::Context context = createContext(entry_point_index, ptx);
+  optix::Context context = createContext(entry_point_index, ptx, "raygen",
+                                         "miss");
 
   optix::Material material = createMaterial(context, ptx,
                                             "closest_hit_radiance0",
