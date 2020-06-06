@@ -53,7 +53,7 @@ static __device__ float3 cylindernormal(float t, float3 t0, float3 t1)
  */
 RT_PROGRAM void intersect(int)
 {
-  float3 d = (cylinder_max - cylinder_min) / ray.direction;// / ray.direction; // unit length
+  float3 d = make_float3(0.f, 0.f, cylinder_max.z - cylinder_min.z) / ray.direction; // unit length
   float3 m = ray.origin - cylinder_min; // Relative to P
   float3 p = (cylinder_min - ray.origin)/ray.direction;
   float3 q = (cylinder_max - ray.origin)/ray.direction;
@@ -68,9 +68,9 @@ RT_PROGRAM void intersect(int)
   float3 nn = dot(n,n);
   float3 mn = dot(m,n);
   float3 mm = dot(m,m);
-  float3 a = dd * nn - nd * nd;
-  float3 k = mm - r*r;
-  float3 c = dd * k - md * md;
+  float a = dd * nn - nd * nd;
+  float k = mm - r*r;
+  float c = dd * k - md * md;
 
   // Test if fully outside endcaps of cylinder
   if (md < 0.0f && md + nd < 0.0f) {
