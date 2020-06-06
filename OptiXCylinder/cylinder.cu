@@ -110,7 +110,7 @@ RT_PROGRAM void intersect(int)
     }
     else {
       // 'a' is inside cylinder
-      if (rtPotentialIntersection()) {
+      if (rtPotentialIntersection(0)) {
         shading_normal = geometric_normal = cylindernormal(m, p_loc, q_loc);
         if(rtReportIntersection(0)) {
           check_second = false;
