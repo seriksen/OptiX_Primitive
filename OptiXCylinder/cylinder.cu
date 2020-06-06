@@ -22,7 +22,7 @@ static __device__ float3 boxnormal(float t, float3 t0, float3 t1)
 
 // cylinder intersection
 // Following intersection maths described ub RTCD - Christer Ericson
-RT_PROGRAM void cylinder_intersect(int)
+RT_PROGRAM void intersect(int)
 {
   //float d =
   float3 t0 = (boxmin - ray.origin)/ray.direction;
@@ -50,7 +50,7 @@ RT_PROGRAM void cylinder_intersect(int)
   }
 }
 
-RT_PROGRAM void cylinder_bounds (int, float result[6])
+RT_PROGRAM void bounds (int, float result[6])
 {
   optix::Aabb* aabb = (optix::Aabb*)result;
   aabb->set(boxmin, boxmax);

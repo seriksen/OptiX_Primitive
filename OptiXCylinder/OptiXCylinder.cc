@@ -206,8 +206,8 @@ optix::GeometryInstance createBox(optix::Context context,
 int main(int argc, char **argv) {
 
   // Set/Get names
-  const char *name = "OptiXBox";
-  const char *primitive = "box";
+  const char *name = "OptiXCylinder";
+  const char *primitive = "cylinder";
   const char *prefix = getenv("PREFIX");
   assert(prefix && "expecting PREFIX envvar pointing to writable directory");
 
