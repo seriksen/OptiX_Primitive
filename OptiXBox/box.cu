@@ -54,12 +54,12 @@
 //using namespace optix;
 
 // OptiX Communication Variables
-optix::rtDeclareVariable(float3, boxmin, , );
-optix::rtDeclareVariable(float3, boxmax, , );
-optix::rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
-optix::rtDeclareVariable(float3, texcoord, attribute texcoord, );
-optix::rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, );
-optix::rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
+rtDeclareVariable(float3, boxmin, , );
+rtDeclareVariable(float3, boxmax, , );
+rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
+rtDeclareVariable(float3, texcoord, attribute texcoord, );
+rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, );
+rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 
 static __device__ float3 boxnormal(float t, float3 t0, float3 t1)
 {
