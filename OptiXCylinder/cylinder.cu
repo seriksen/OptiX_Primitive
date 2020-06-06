@@ -77,6 +77,7 @@ RT_PROGRAM void intersect(int)
   float a = dd * nn - nd * nd;
   float k = mm - r*r;
   float c = dd * k - md * md;
+  float t;
 
   // Test if fully outside endcaps of cylinder
   if (md < 0.0f && md + nd < 0.0f) {
