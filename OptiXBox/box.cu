@@ -51,7 +51,7 @@
 #include <optixu/optixu_matrix_namespace.h>
 #include <optixu/optixu_aabb_namespace.h>
 
-//using namespace optix;
+using namespace optix; // Not actually used anywhere here?
 
 // OptiX Communication Variables
 rtDeclareVariable(float3, boxmin, , );
