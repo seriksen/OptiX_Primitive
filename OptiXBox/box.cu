@@ -74,8 +74,8 @@ RT_PROGRAM void intersect(int)
   // Declare local variables
   float3 t0 = (boxmin - ray.origin)/ray.direction;
   float3 t1 = (boxmax - ray.origin)/ray.direction;
-  float3 near = fminf(t0, t1);
-  float3 far = fmaxf(t0, t1);
+  float3 near = fminf(t0, t1); // near field
+  float3 far = fmaxf(t0, t1); // far field
   float tmin = fmaxf( near );
   float tmax = fminf( far );
 
