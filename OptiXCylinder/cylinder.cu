@@ -53,15 +53,20 @@ static __device__ float3 cylindernormal(float t, float3 t0, float3 t1)
  */
 RT_PROGRAM void intersect(int)
 {
-  float3 d = make_float3(0.f, 0.f, cylinder_max.z - cylinder_min.z) / ray.direction; // unit length
-  float3 m = ray.origin - cylinder_min; // Relative to P
-  float3 p = (cylinder_min - ray.origin)/ray.direction;
-  float3 q = (cylinder_max - ray.origin)/ray.direction;
-  float3 n = ray.direction;
+  // Cylinder information
+  float3 p_loc = cylinder_min;
+  float3 q_loc = cylinder_max;
+  float z = q_loc.z - p_loc.z;
   float r = cylinder_r.x;
+
+  // Ray information
+  float3 m = ray.origin - p_loc; // ray origin relative to P
+  float3 n = ray.direction;
+
+  // Other vars
   bool check_second = true;
 
-  // Calculate variables
+  // Calculate dot products
   float3 md = dot(m,d);
   float3 nd = dot(n,d);
   float3 dd = dot(d,d);
@@ -102,7 +107,7 @@ RT_PROGRAM void intersect(int)
     else {
       // 'a' is inside cylinder
       if (rtPotentialIntersection()) {
-        shading_normal = geometric_normal = cylindernormal(m, p, q);
+        shading_normal = geometric_normal = cylindernormal(m, p_loc, q_loc);
         if(rtReportIntersection(0)) {
           check_second = false;
         }
