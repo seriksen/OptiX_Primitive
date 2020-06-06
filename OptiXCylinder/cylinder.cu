@@ -54,10 +54,11 @@ static __device__ float3 cylindernormal(float t, float3 t0, float3 t1)
 RT_PROGRAM void intersect(int)
 {
   // Cylinder information
-  float3 p_loc = cylinder_min;
-  float3 q_loc = cylinder_max;
+  float3 p_loc = cylinder_min; // P location
+  float3 q_loc = cylinder_max; // Q location
   float z = q_loc.z - p_loc.z;
   float r = cylinder_r.x;
+  float3 d = q_loc - p_loc;
 
   // Ray information
   float3 m = ray.origin - p_loc; // ray origin relative to P
