@@ -54,8 +54,8 @@
 //using namespace optix;
 
 // OptiX Communication Variables
-optix::rtDeclareVariable(float3, boxmin, , ); // AABB corner
-optix::rtDeclareVariable(float3, boxmax, , ); // AABB corner
+optix::rtDeclareVariable(float3, boxmin, , );
+optix::rtDeclareVariable(float3, boxmax, , );
 optix::rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
 optix::rtDeclareVariable(float3, texcoord, attribute texcoord, );
 optix::rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, );
