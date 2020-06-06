@@ -17,17 +17,6 @@
  * limitations under the License.
  */
 
-/**
-UseOptiXGeometry
-===================
-
-Minimally demonstrate OptiX geometry without using OXRAP.
-
-* "standalone" ray traces a box using a normal shader
-
-
-**/
-
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -165,39 +154,39 @@ optix::Material createMaterial(optix::Context context,
 }
 
 
-optix::GeometryInstance createBox(optix::Context context,
-                                  optix::Material material,
-                                  glm::vec4 ce,
-                                  const char *ptx,
-                                  const char* primitive_ptx)
+optix::GeometryInstance createCylinder(optix::Context context,
+                                       optix::Material material,
+                                       glm::vec4 ce,
+                                       const char *ptx,
+                                       const char* primitive_ptx)
 {
-  optix::Geometry box;
-  assert(box.get() == NULL);
+  optix::Geometry cylinder;
+  assert(cylinder.get() == NULL);
 
-  box = context->createGeometry();
-  assert(box.get() != NULL);
+  cylinder = context->createGeometry();
+  assert(cylinder.get() != NULL);
 
   // The box geometry only has one primitive = box.cu
-  box->setPrimitiveCount(1u);
+  cylinder->setPrimitiveCount(1u);
 
   // Get box primitive bounds from PTX file
   // See box_bounds in box.cu
-  box->setBoundingBoxProgram(
+  cylinder->setBoundingBoxProgram(
       context->createProgramFromPTXFile(primitive_ptx, "bounds"));
 
   // Get box primitive intersection from PTX file
   // See box_intersect in box.cu
-  box->setIntersectionProgram(
+  cylinder->setIntersectionProgram(
       context->createProgramFromPTXFile(primitive_ptx, "intersect"));
 
   // Set box size
   float sz = ce.w;
-  box["boxmin"]->setFloat(-sz / 2.f, -sz / 2.f, -sz / 2.f);
-  box["boxmax"]->setFloat(sz / 2.f, sz / 2.f, sz / 2.f);
+  cylinder["boxmin"]->setFloat(-sz / 2.f, -sz / 2.f, -sz / 2.f);
+  cylinder["boxmax"]->setFloat(sz / 2.f, sz / 2.f, sz / 2.f);
 
   // Put it all together
   optix::GeometryInstance gi =
-      context->createGeometryInstance(box, &material, &material + 1);
+      context->createGeometryInstance(cylinder, &material, &material + 1);
 
   return gi;
 }
@@ -236,8 +225,8 @@ int main(int argc, char **argv) {
                                             "closest_hit_radiance0",
                                             entry_point_index);
 
-  optix::GeometryInstance gi = createBox(context, material, ce, ptx,
-                                         primitive_ptx);
+  optix::GeometryInstance gi = createCylinder(context, material, ce, ptx,
+                                              primitive_ptx);
 
 
   optix::GeometryGroup gg = context->createGeometryGroup();
