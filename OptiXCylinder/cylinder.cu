@@ -68,12 +68,12 @@ RT_PROGRAM void intersect(int)
   bool check_second = true;
 
   // Calculate dot products
-  float3 md = dot(m,d);
-  float3 nd = dot(n,d);
-  float3 dd = dot(d,d);
-  float3 nn = dot(n,n);
-  float3 mn = dot(m,n);
-  float3 mm = dot(m,m);
+  float md = dot(m,d);
+  float nd = dot(n,d);
+  float dd = dot(d,d);
+  float nn = dot(n,n);
+  float mn = dot(m,n);
+  float mm = dot(m,m);
   float a = dd * nn - nd * nd;
   float k = mm - r*r;
   float c = dd * k - md * md;
