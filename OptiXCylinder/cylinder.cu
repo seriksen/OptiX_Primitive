@@ -58,7 +58,7 @@ RT_PROGRAM void intersect(int)
   float3 q_loc = cylinder_max; // Q location
   //float z = cylinder_max.z - cylinder_min.z;
   float r = cylinder_r.x;
-  float3 d = q_loc - p_loc;
+  float3 d = (q_loc - p_loc) / ray.direction;
 
   // Ray information
   float3 m = ray.origin - p_loc; // ray origin relative to P
