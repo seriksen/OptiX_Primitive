@@ -56,7 +56,7 @@ RT_PROGRAM void intersect(int)
   // Cylinder information
   float3 p_loc = cylinder_min; // P location
   float3 q_loc = cylinder_max; // Q location
-  float z = q_loc.z - p_loc.z;
+  float z = cylinder_max.z - cylinder_min.z;
   float r = cylinder_r.x;
   float3 d = q_loc - p_loc;
 
