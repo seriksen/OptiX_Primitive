@@ -51,15 +51,15 @@
 #include <optixu/optixu_matrix_namespace.h>
 #include <optixu/optixu_aabb_namespace.h>
 
-using namespace optix;
+//using namespace optix;
 
-// Communication Variables
-rtDeclareVariable(float3, boxmin, , );
-rtDeclareVariable(float3, boxmax, , );
-rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
-rtDeclareVariable(float3, texcoord, attribute texcoord, );
-rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, );
-rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
+// OptiX Communication Variables
+optix::rtDeclareVariable(float3, boxmin, , ); // AABB corner
+optix::rtDeclareVariable(float3, boxmax, , ); // AABB corner
+optix::rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
+optix::rtDeclareVariable(float3, texcoord, attribute texcoord, );
+optix::rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, );
+optix::rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 
 static __device__ float3 boxnormal(float t, float3 t0, float3 t1)
 {
@@ -81,17 +81,17 @@ RT_PROGRAM void intersect(int)
 
   if(tmin <= tmax) {
     bool check_second = true;
-    if( rtPotentialIntersection( tmin ) ) {
+    if( optix::rtPotentialIntersection( tmin ) ) {
       texcoord = make_float3( 0.0f );
       shading_normal = geometric_normal = boxnormal( tmin, t0, t1 );
-      if(rtReportIntersection(0))
+      if(optix::rtReportIntersection(0))
         check_second = false;
     }
     if(check_second) {
-      if( rtPotentialIntersection( tmax ) ) {
+      if( optix::rtPotentialIntersection( tmax ) ) {
         texcoord = make_float3( 0.0f );
         shading_normal = geometric_normal = boxnormal( tmax, t0, t1 );
-        rtReportIntersection(0);
+        optix::rtReportIntersection(0);
       }
     }
   }
