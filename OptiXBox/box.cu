@@ -81,17 +81,17 @@ RT_PROGRAM void intersect(int)
 
   if(tmin <= tmax) {
     bool check_second = true;
-    if( optix::rtPotentialIntersection( tmin ) ) {
+    if( rtPotentialIntersection( tmin ) ) {
       texcoord = make_float3( 0.0f );
       shading_normal = geometric_normal = boxnormal( tmin, t0, t1 );
-      if(optix::rtReportIntersection(0))
+      if(rtReportIntersection(0))
         check_second = false;
     }
     if(check_second) {
-      if( optix::rtPotentialIntersection( tmax ) ) {
+      if( rtPotentialIntersection( tmax ) ) {
         texcoord = make_float3( 0.0f );
         shading_normal = geometric_normal = boxnormal( tmax, t0, t1 );
-        optix::rtReportIntersection(0);
+        rtReportIntersection(0);
       }
     }
   }
