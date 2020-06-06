@@ -56,7 +56,7 @@ RT_PROGRAM void intersect(int)
   // Cylinder information
   float3 p_loc = cylinder_min; // P location
   float3 q_loc = cylinder_max; // Q location
-  float z = cylinder_max.z - cylinder_min.z;
+  //float z = cylinder_max.z - cylinder_min.z;
   float r = cylinder_r.x;
   float3 d = q_loc - p_loc;
 
@@ -101,10 +101,12 @@ RT_PROGRAM void intersect(int)
     if (md < 0.f) {
       // Intersect with P
       t = -mn / nn;
+      return;
     }
     else if (md > dd) {
       // Intersect with Q
       t = (nd - mn) / nn;
+      return;
     }
     else {
       // 'a' is inside cylinder
@@ -117,6 +119,7 @@ RT_PROGRAM void intersect(int)
     }
 
   }
+  return;
 }
 
 RT_PROGRAM void bounds (int, float result[6])
