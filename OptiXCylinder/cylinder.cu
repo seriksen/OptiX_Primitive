@@ -53,6 +53,8 @@ static __device__ float3 cylindernormal(float t, float3 t0, float3 t1)
  */
 RT_PROGRAM void intersect(int)
 {
+  // TODO: Add second half of intersection
+
   // Cylinder information
   float3 p_loc = cylinder_min; // P location
   float3 q_loc = cylinder_max; // Q location
