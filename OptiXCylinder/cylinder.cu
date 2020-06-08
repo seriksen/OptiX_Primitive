@@ -360,5 +360,7 @@ RT_PROGRAM void intersect(int) {
 RT_PROGRAM void bounds (int, float result[6])
 {
   optix::Aabb* aabb = (optix::Aabb*)result;
-  aabb->set(cylinder_min, cylinder_max);
+  float3 min_v = make_float3(cylinder_min.x, cylinder_min.y, cylinder_min.z);
+  float3 max_v = make_float3(cylinder_max.x, cylinder_max.y, cylinder_max.z);
+  aabb->set(min_v, max_v);
 }
