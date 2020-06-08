@@ -3,8 +3,6 @@
 #include <optixu/optixu_matrix_namespace.h>
 #include <optixu/optixu_aabb_namespace.h>
 
-
-
 /*
  * Copyright (c) 2018, NVIDIA CORPORATION. All rights reserved.
  *
