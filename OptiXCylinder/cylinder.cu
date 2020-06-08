@@ -220,9 +220,7 @@ RT_PROGRAM void intersect(int) {
 
   // root 1
   t_root1 = (-b - sqrtf(disc)) / a;
-  radius_check;
-
-  float3 root1_pos = ray.origin + root1*ray.direction ;
+  float3 root1_pos = ray.origin + t_root1*ray.direction ;
 
   // Intersection inside cylinder
   if ( md + t_root1 * nd > 0.f && md + t_root1 * nd < dd )
@@ -230,7 +228,7 @@ RT_PROGRAM void intersect(int) {
     if( rtPotentialIntersection(t_root1) )
     {
       // Intersection relative to P
-      float3 N  = (root1_pos - p)/radius  ;
+      float3 N  = (root1_pos - p)/r  ;
       N.z = 0.f ;
       shading_normal = geometric_normal = normalize(N) ;
       rtReportIntersection(0);
@@ -273,7 +271,7 @@ RT_PROGRAM void intersect(int) {
 
 
   t_root2 = (-b + sqrtf(disc))/a;     // far root : means are inside (always?)
-  float3 root2_pos = ray.origin + root2*ray.direction ;
+  float3 root2_pos = ray.origin + t_root2*ray.direction ;
 
   // Intersection inside cylinder
   if( md + t_root2 * nd > 0.f && md + t_root2 * nd < dd )
