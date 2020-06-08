@@ -181,7 +181,7 @@ optix::GeometryInstance createSphere(optix::Context context,
 
   // Set box size
   float sz = ce.w;
-  sphere["sphere"]->setFloat(0, 0, 0, 1.5);
+  sphere["sphere"]->setFloat(0, 0, 0, 0.5);
 
   // Put it all together
   optix::GeometryInstance gi =
