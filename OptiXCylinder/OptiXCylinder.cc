@@ -181,9 +181,12 @@ optix::GeometryInstance createCylinder(optix::Context context,
 
   // Set box size
   float sz = ce.w;
-  cylinder["cylinder_min"]->setFloat(-sz / 2.f, -sz / 2.f, -sz / 2.f);
-  cylinder["cylinder_max"]->setFloat(sz / 2.f, sz / 2.f, sz / 2.f);
-  cylinder["cylinder_r"]->setFloat(sz/2.f,0.f,0.f);
+  cylinder['radius']->setFloat(sz / 2.f, sz / 2.f, sz / 2.f);
+  cylinder['center']->setFloat(0.f,0.f,0.f);
+
+  //cylinder["cylinder_min"]->setFloat(-sz / 2.f, -sz / 2.f, -sz / 2.f);
+  //cylinder["cylinder_max"]->setFloat(sz / 2.f, sz / 2.f, sz / 2.f);
+  //cylinder["cylinder_r"]->setFloat(sz/2.f,0.f,0.f);
 
   // Put it all together
   optix::GeometryInstance gi =
