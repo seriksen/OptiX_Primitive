@@ -204,7 +204,7 @@ RT_PROGRAM void intersect(int) {
   if (disc < 0.f) return;
 
 
-  t = (-b - sqrft(disc)) / a;
+  t = (-b - sqrtf(disc)) / a;
   float radius_check;
   // Intersection is outside segment
   if (t < 0.f || t > 1.0f) return;
