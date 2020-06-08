@@ -129,6 +129,8 @@ RT_PROGRAM void intersect(int) {
 
   float3 d = make_float3(0.f,0.f,q.z - p.z); // cylinder z
 
+  rtPrintf('aaa');
+  return;
   // Ray information
   float3 m = ray.origin - p; // ray origin relative to P
   float3 n = ray.direction;
