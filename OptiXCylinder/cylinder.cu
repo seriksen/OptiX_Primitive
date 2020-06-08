@@ -24,8 +24,8 @@ rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 
 /*
  * Cylinder Intersection
- * NOTE: Follows intersection maths described in RTCD - Christer Ericson so
- * cylinder origin is at P.
+ * NOTE: Based on RTCD - Christer Ericson so cylinder origin is at P.
+ * Has been moved to a ray rather than segment
  *
  * Essentially it's comparing the cylinder frame to the ray frame
  *
@@ -123,208 +123,30 @@ rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
  */
 RT_PROGRAM void intersect(int) {
   // Cylinder properties from RT variables
-  float3 position = cylinder_p;  // 0,0,-169.  <-- P: point on axis at base of cylinder
 
-  float zmin = cylinder_p.z ;  // using bbox z-range
-  float zmax = cylinder_q.z ;
-
-  float clipped_sizeZ = zmax - zmin ;
-  float radius = cylinder_r.w ;
-
-
-  //rtPrintf("intersect_ztubs position %10.4f %10.4f %10.4f \n", position.x, position.y, position.z );
-  //rtPrintf("intersect_ztubs flags %d PCAP %d QCAP %d \n", flags, PCAP, QCAP);
-
-  float3 m = ray.origin - position ;                  // ray origin in cylinder P-frame
-  float3 n = ray.direction ;
-  float3 d = make_float3(0.f, 0.f, clipped_sizeZ );   // cylinder axis
-
-  float rr = radius*radius ;
-  float3 dnorm = normalize(d);
-
-
-  float mm = dot(m, m) ;
-  float nn = dot(n, n) ;
-  float dd = dot(d, d) ;
-  float nd = dot(n, d) ;
-  float md = dot(m, d) ;
-  float mn = dot(m, n) ;
-  float k = mm - rr ;
-
-  // quadratic coefficients of t,     a tt + 2b t + c = 0
-  float a = dd*nn - nd*nd ;
-  float b = dd*mn - nd*md ;
-  float c = dd*k - md*md ;
-
-  float disc = b*b-a*c;
-
-  // axial ray endcap handling
-  if(fabs(a) < 1e-6f)
-  {
-    if(c > 0.f) return ;    // ray starts and ends outside cylinder
-    if(md < 0.f)    // ray origin on P side
-    {
-      float t = -mn/nn ;  // P endcap
-      if( rtPotentialIntersection(t) )
-      {
-        shading_normal = geometric_normal = -dnorm  ;
-        rtReportIntersection(0);
-      }
-    }
-    else if(md > dd) // ray origin on Q side
-    {
-      float t = (nd - mn)/nn ;  // Q endcap
-      if( rtPotentialIntersection(t) )
-      {
-        shading_normal = geometric_normal = dnorm ;
-        rtReportIntersection(0);
-      }
-    }
-    else    // md 0->dd, ray origin inside
-    {
-      if( nd > 0.f) // ray along +d
-      {
-        float t = -mn/nn ;    // P endcap from inside
-        if( rtPotentialIntersection(t) )
-        {
-          shading_normal = geometric_normal = dnorm  ;
-          rtReportIntersection(0);
-        }
-      }
-      else  // ray along -d
-      {
-        float t = (nd - mn)/nn ;  // Q endcap from inside
-        if( rtPotentialIntersection(t) )
-        {
-          shading_normal = geometric_normal = -dnorm ;
-          rtReportIntersection(0);
-        }
-      }
-    }
-    return ;   // hmm
-  }
-
-  if(disc > 0.0f)  // intersection with the infinite cylinder
-  {
-    float sdisc = sqrtf(disc);
-
-    float root1 = (-b - sdisc)/a;
-
-    // m:ray.origin-position
-    // n:ray.direction
-
-    float ad1 = md + root1*nd ;        // axial coord of intersection point (* sizeZ)
-    float3 P1 = ray.origin + root1*ray.direction ;
-
-    if( ad1 > 0.f && ad1 < dd )  // intersection inside cylinder range
-    {
-      if( rtPotentialIntersection(root1) )
-      {
-        float3 N  = (P1 - position)/radius  ;
-        N.z = 0.f ;
-
-        //rtPrintf("intersect_ztubs r %10.4f disc %10.4f sdisc %10.4f root1 %10.4f P %10.4f %10.4f %10.4f N %10.4f %10.4f \n",
-        //    radius, disc, sdisc, root1, P1.x, P1.y, P1.z, N.x, N.y );
-
-        shading_normal = geometric_normal = normalize(N) ;
-        rtReportIntersection(0);
-      }
-    }
-    else if( ad1 < 0.f ) //  intersection outside cylinder on P side
-    {
-      if( nd <= 0.f ) return ; // ray direction away from endcap
-      float t = -md/nd ;   // P endcap
-      float checkr = k + t*(2.f*mn + t*nn) ; // bracket typo in book 2*t*t makes no sense
-      if ( checkr < 0.f )
-      {
-        if( rtPotentialIntersection(t) )
-        {
-          shading_normal = geometric_normal = -dnorm  ;
-          rtReportIntersection(0);
-        }
-      }
-    }
-    else if( ad1 > dd  ) //  intersection outside cylinder on Q side
-    {
-      if( nd >= 0.f ) return ; // ray direction away from endcap
-      float t = (dd-md)/nd ;   // Q endcap
-      float checkr = k + dd - 2.0f*md + t*(2.f*(mn-nd)+t*nn) ;
-      if ( checkr < 0.f )
-      {
-        if( rtPotentialIntersection(t) )
-        {
-          shading_normal = geometric_normal = dnorm  ;
-          rtReportIntersection(0);
-        }
-      }
-    }
-
-
-    float root2 = (-b + sdisc)/a;     // far root : means are inside (always?)
-    float ad2 = md + root2*nd ;        // axial coord of far intersection point
-    float3 P2 = ray.origin + root2*ray.direction ;
-
-
-    if( ad2 > 0.f && ad2 < dd )  // intersection from inside against wall
-    {
-      if( rtPotentialIntersection(root2) )
-      {
-        float3 N  = (P2 - position)/radius  ;
-        N.z = 0.f ;
-
-        shading_normal = geometric_normal = -normalize(N) ;
-        rtReportIntersection(0);
-      }
-    }
-    else if( ad2 < 0.f ) //  intersection from inside to P endcap
-    {
-      float t = -md/nd ;   // P endcap
-      float checkr = k + t*(2.f*mn + t*nn) ; // bracket typo in book 2*t*t makes no sense
-      if ( checkr < 0.f )
-      {
-        if( rtPotentialIntersection(t) )
-        {
-          shading_normal = geometric_normal = dnorm  ;
-          rtReportIntersection(0);
-        }
-      }
-    }
-    else if( ad2 > dd ) //  intersection from inside to Q endcap
-    {
-      float t = (dd-md)/nd ;   // Q endcap
-      float checkr = k + dd - 2.0f*md + t*(2.f*(mn-nd)+t*nn) ;
-      if ( checkr < 0.f )
-      {
-        if( rtPotentialIntersection(t) )
-        {
-          shading_normal = geometric_normal = -dnorm  ;
-          rtReportIntersection(0);
-        }
-      }
-    }
-  }
-}
-
-/*
   float3 p = cylinder_p;
   float3 q = cylinder_q;
   float r = cylinder_r.w;
 
   float3 d = make_float3(0.f,0.f,q.z - p.z); // cylinder z
-  if (rtPotentialIntersection(0.01f)) {
-    shading_normal = geometric_normal = make_float3(0.f, 1.0f, 0.f);
-    rtReportIntersection(0);
-  }
-  return;
+
   // Ray information
   float3 m = ray.origin - p; // ray origin relative to P
   float3 n = ray.direction;
+  float t;
 
   // Initial dot products
-  // TODO: Move them all together
-  float md = dot(m, d);
-  float nd = dot(n, d);
-  float dd = dot(d, d);
+  float mm = dot(m,m);
+  float nn = dot(n,n);
+  float dd = dot(d,d);
+  float md = dot(m,d);
+  float nd = dot(n,d);
+  float mn = dot(m,n);
+
+  // at^2 + bt + c = 0
+  float a = dd * nn - nd * nd;
+  float b = dd * mn - nd * md;
+  float c = dd * (mm - r*r) - md * md;
 
   //***************
   // Test Endcaps
@@ -336,16 +158,6 @@ RT_PROGRAM void intersect(int) {
   // Above Q
   if (md > dd && md + nd > dd)
     return;
-
-  // More dot products
-  float nn = dot(n,n);
-  float mn = dot(m,n);
-  float mm = dot(m,m);
-  float a = dd * nn - nd * nd;
-  float c = dd * (mm - r*r) - md * md;
-
-  // Also define t
-  float t;
 
   // If a is parallel to cylinder
   if (fabs(a) < 1e-6f) {
@@ -373,29 +185,140 @@ RT_PROGRAM void intersect(int) {
     }
     // Ray origin is inside cylinder
     else {
-      // going to say that the ray counts as a miss for now
-      //t = 0.f;
+      // Ray intersects P from inside
+      if (nd > 0.f) {
+        t = -mn / nn;
+        if (rtPotentialIntersection(t)) {
+          shading_normal = geometric_normal = normalize(d);
+          rtReportIntersection(0);
+        }
+      }
+      // Ray intersects Q from inside
+      else {
+        t = (nd - mn) / nn;
+        if (rtPotentialIntersection(t)) {
+          shading_normal = geometric_normal = normalize(d);
+          rtReportIntersection(0);
+        }
+      }
+    }
       return;
     }
-  }
 
   //************************
   // Test Infinite Cylinder
   //************************
 
   // Define some more things
-  float b = dd * mn - nd * md;
   float disc = b*b - a*c;
+  float t_root1;
+  float t_root2;
+  float radius_check;
 
-  // Has no roots
+  // Has no roots and no intersection
   if (disc < 0.f) return;
 
+  // root 1
+  t_root1 = (-b - sqrtf(disc)) / a;
+  radius_check;
 
-  t = (-b - sqrtf(disc)) / a;
-  float radius_check;
-  // Intersection is outside segment
-  if (t < 0.f || t > 1.0f) return;
+  float ad1 = md + root1*nd ;        // axial coord of intersection point (* sizeZ)
+  float3 root1_pos = ray.origin + root1*ray.direction ;
 
+  // Intersection inside cylinder
+  if ( md + t_root1 * nd > 0.f && md + t_root1 * nd < dd )
+  {
+    if( rtPotentialIntersection(t_root1) )
+    {
+      // Intersection relative to P
+      float3 N  = (root1_pos - p)/radius  ;
+      N.z = 0.f ;
+      shading_normal = geometric_normal = normalize(N) ;
+      rtReportIntersection(0);
+    }
+  }
+  // Intersection outside cylinder P side
+  else if ( md + t_root1 * nd < 0.f )
+  {
+    // Ray is going away from endcap
+    if (nd <= 0.f) return;
+
+    t = -md/nd ;   // P endcap
+    radius_check =  (mm - r*r) + t*(2.f*mn + t*nn);
+    if ( radius_check < 0.f )
+    {
+      if( rtPotentialIntersection(t) )
+      {
+        shading_normal = geometric_normal = -normalize(d);
+        rtReportIntersection(0);
+      }
+    }
+  }
+  // Intersection outside cylinder Q side
+  else if( md + t_root1 * nd > dd )
+  {
+    // Ray is going away from endcap
+    if( nd >= 0.f ) return;
+
+    t = (dd-md)/nd ;   // Q endcap
+    radius_check = (mm - r*r) + dd - 2.0f*md + t*(2.f*(mn-nd)+t*nn) ;
+    if ( radius_check < 0.f )
+    {
+      if( rtPotentialIntersection(t) )
+      {
+        shading_normal = geometric_normal = dnorm  ;
+        rtReportIntersection(0);
+      }
+    }
+  }
+
+
+  t_root2 = (-b + sqrtf(disc))/a;     // far root : means are inside (always?)
+  float ad2 = md + root2*nd ;        // axial coord of far intersection point
+  float3 root2_pos = ray.origin + root2*ray.direction ;
+
+  // Intersection inside cylinder
+  if( md + t_root2 * nd > 0.f && md + t_root2 * nd < dd )
+  {
+    if( rtPotentialIntersection(t_root2) )
+    {
+      float3 N  = (root2_pos - p)/radius  ;
+      N.z = 0.f ;
+
+      shading_normal = geometric_normal = -normalize(N) ;
+      rtReportIntersection(0);
+    }
+  }
+  // Intersection inside at P
+  else if( md + t_root2 * nd < 0.f )
+  {
+    t = -md/nd ;   // P endcap
+    radius_check = (mm - r*r) + t*(2.f*mn + t*nn);
+    if ( radius_check < 0.f )
+    {
+      if( rtPotentialIntersection(t) )
+      {
+        shading_normal = geometric_normal = normalize(d);
+        rtReportIntersection(0);
+      }
+    }
+  }
+  // Intersection inside at Q
+  else if( md + t_root2 * nd > dd)
+  {
+    t = (dd-md)/nd ;   // Q endcap
+    radius_check = (mm - r*r) + dd - 2.0f*md + t*(2.f*(mn-nd)+t*nn) ;
+    if ( radius_check < 0.f )
+    {
+      if( rtPotentialIntersection(t) )
+      {
+        shading_normal = geometric_normal = -normalize(d) ;
+        rtReportIntersection(0);
+      }
+    }
+  }
+}
+/*
   // Intersection on P side
   if (md + t * nd < 0.f) {
     // Ray is going away from endcap
@@ -434,7 +357,8 @@ RT_PROGRAM void intersect(int) {
   return;
 
 }
-*/
+ */
+
 RT_PROGRAM void bounds (int, float result[6])
 {
   optix::Aabb* aabb = (optix::Aabb*)result;
