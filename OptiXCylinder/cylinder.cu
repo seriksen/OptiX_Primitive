@@ -9,6 +9,8 @@ using namespace optix;
 rtDeclareVariable(float3, cylinder_p, , );
 rtDeclareVariable(float3, cylinder_q, , );
 rtDeclareVariable(float4, cylinder_r, , );
+rtDeclareVariable(float4, cylinder_min, , );
+rtDeclareVariable(float4, cylinder_max, , );
 rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
 rtDeclareVariable(float3, texcoord, attribute texcoord, );
 rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, );
@@ -358,7 +360,5 @@ RT_PROGRAM void intersect(int) {
 RT_PROGRAM void bounds (int, float result[6])
 {
   optix::Aabb* aabb = (optix::Aabb*)result;
-  float3 min_v = make_float3(-0.5f,-0.5f,-0.5f);
-  float3 max_v = make_float3(0.5f,0.5f,0.5f);
-  aabb->set(min_v, max_v);
+  aabb->set(cylinder_min, cylinder_max);
 }
