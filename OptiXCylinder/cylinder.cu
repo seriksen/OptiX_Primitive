@@ -45,7 +45,7 @@ rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
 
 template<bool use_robust_method>
 static __device__
-void intersect_sphere(void)
+RT_PROGRAM void intersect(int)
 {
   float3 center = make_float3(sphere);
   float3 O = ray.origin - center;
@@ -96,19 +96,6 @@ void intersect_sphere(void)
     }
   }
 }
-
-
-RT_PROGRAM void intersect(int primIdx)
-{
-  intersect_sphere<false>();
-}
-
-
-RT_PROGRAM void robust_intersect(int primIdx)
-{
-  intersect_sphere<true>();
-}
-
 
 RT_PROGRAM void bounds (int, float result[6])
 {
