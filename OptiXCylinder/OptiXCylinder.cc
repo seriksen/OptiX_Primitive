@@ -183,7 +183,7 @@ optix::GeometryInstance createCylinder(optix::Context context,
   float sz = ce.w;
   cylinder["cylinder_p"]->setFloat(0.f, 0.f, -sz / 2.f);
   cylinder["cylinder_q"]->setFloat(0.f, 0.f, sz / 2.f);
-  cylinder["cylinder_r"]->setFloat(0.f,0.f,0.f, 0.01f);
+  cylinder["cylinder_r"]->setFloat(0.f,0.f,0.f, 0.1f);
   cylinder["cylinder_min"]->setFloat(-0.5f,-0.5f,-0.5f);
   cylinder["cylinder_max"]->setFloat(0.5f,0.5f,0.5f);
 
