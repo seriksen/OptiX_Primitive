@@ -128,7 +128,8 @@ RT_PROGRAM void intersect(int) {
   float r = cylinder_r.w;
 
   float3 d = make_float3(0.f,0.f,q.z - p.z); // cylinder z
-
+  shading_normal = geometric_normal = make_float3(0.f,1.0f,0.f);
+  rtReportIntersection(0);
   return;
   // Ray information
   float3 m = ray.origin - p; // ray origin relative to P
