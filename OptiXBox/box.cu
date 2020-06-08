@@ -51,8 +51,9 @@
 #include <optixu/optixu_matrix_namespace.h>
 #include <optixu/optixu_aabb_namespace.h>
 
-using namespace optix;
+using namespace optix; // Not actually used anywhere here?
 
+// OptiX Communication Variables
 rtDeclareVariable(float3, boxmin, , );
 rtDeclareVariable(float3, boxmax, , );
 rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
@@ -67,12 +68,14 @@ static __device__ float3 boxnormal(float t, float3 t0, float3 t1)
   return pos-neg;
 }
 
-RT_PROGRAM void box_intersect(int)
+// Define what is an intersection of the box
+RT_PROGRAM void intersect(int)
 {
+  // Declare local variables
   float3 t0 = (boxmin - ray.origin)/ray.direction;
   float3 t1 = (boxmax - ray.origin)/ray.direction;
-  float3 near = fminf(t0, t1);
-  float3 far = fmaxf(t0, t1);
+  float3 near = fminf(t0, t1); // near field
+  float3 far = fmaxf(t0, t1); // far field
   float tmin = fmaxf( near );
   float tmax = fminf( far );
 
@@ -94,7 +97,7 @@ RT_PROGRAM void box_intersect(int)
   }
 }
 
-RT_PROGRAM void box_bounds (int, float result[6])
+RT_PROGRAM void bounds (int, float result[6])
 {
   optix::Aabb* aabb = (optix::Aabb*)result;
   aabb->set(boxmin, boxmax);
