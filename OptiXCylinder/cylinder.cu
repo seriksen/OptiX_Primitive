@@ -67,6 +67,7 @@ RT_PROGRAM void intersect(int)
   float3 n = ray.direction;
 
   // Other vars
+  bool hasIntersect{false};
   bool check_second = true;
 
   // Calculate dot products
@@ -81,6 +82,7 @@ RT_PROGRAM void intersect(int)
   float c = dd * k - md * md;
   float t;
 
+
   // Test if fully outside endcaps of cylinder
   if (md < 0.0f && md + nd < 0.0f) {
     // Not in cylinder
@@ -94,6 +96,7 @@ RT_PROGRAM void intersect(int)
   }
   // Is within endcaps
   else if (fabs(a) < 1e-6f) {
+    // ray is parrallel to cylinder axis
     if (c > 0.f) {
       // Not in cyclinder
       // 'a' is outside cylinder
@@ -103,26 +106,58 @@ RT_PROGRAM void intersect(int)
     if (md < 0.f) {
       // Intersect with P
       t = -mn / nn;
-      return;
-    }
-    else if (md > dd) {
+      hasIntersect = true;
+    } else if (md > dd) {
       // Intersect with Q
       t = (nd - mn) / nn;
+      hasIntersect = true;
+    } else {
+      // 'a' is inside cylinder
+      t = 0.0f;
+      hasIntersect = true;
+    }
+    check_second = false;
+  }
+  if (check_second) {
+    float b = dd * mn - nd * md;
+    float discr = b * b - a * c;
+    if (discr < 0.0f) {
+      // No roots and no intersection
       return;
     }
-    else {
-      // 'a' is inside cylinder
-      if (rtPotentialIntersection(md)) {
-        shading_normal = geometric_normal = cylindernormal(md, p_loc, q_loc);
-        if(rtReportIntersection(0)) {
-          check_second = false;
+    t = (-b - sqrtf(discr)) / a;
+    if (t < 0.0f || t > 1.0f) {
+      // root is outside segment so no intersection
+      return;
+    }
+    if (md + t * nd < 0.0f) {
+      // Intersection is outside cylinder of P
+      if (nd <= 0.0f) {
+        // Segment pointing away from endcap
+        return;
+      }
+      t = -md / nd;
+      if ((k + 2 * t * (mn + t * nn)) <= 0.0f) {
+        hasIntersect = true;
+      }
+    } else if (md + t * nd > dd) {
+      // Intersection is outside cylinder on Q side
+      if (nd >= 0.0f) {
+        t = (dd - md) / nd;
+        if ((k + dd - 2 * md + t * (2 * (mn - nd) + t * nn)) <= 0.0f) {
+          hasIntersect = true;
         }
       }
     }
-
   }
-  return;
-}
+  if (hasIntersect) {
+    if (rtPotentialIntersection(t)) {
+      texcoord = make_float3( 0.0f );
+      shading_normal = geometric_normal = cylindernormal(md, p_loc, q_loc);
+      rtReportIntersection(0);
+      }
+    }
+  }
 
 RT_PROGRAM void bounds (int, float result[6])
 {
