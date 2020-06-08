@@ -153,7 +153,7 @@ RT_PROGRAM void intersect(int)
   if (hasIntersect) {
     if (rtPotentialIntersection(t)) {
       texcoord = make_float3( 0.0f );
-      shading_normal = geometric_normal = cylindernormal(md, p_loc, q_loc);
+      shading_normal = geometric_normal = cylindernormal(t, p_loc, q_loc);
       rtReportIntersection(0);
       }
     }
