@@ -16,7 +16,7 @@ rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 RT_PROGRAM void bounds (int, float result[6])
 {
   optix::Aabb* aabb = (optix::Aabb*)result;
-  aabb->set(cylinder_min, cylinder_max);
+  aabb->set(center - radius, center + radius);
 }
 
 RT_PROGRAM void intersect(int)
