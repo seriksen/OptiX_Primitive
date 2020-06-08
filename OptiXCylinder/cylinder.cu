@@ -14,13 +14,13 @@ rtDeclareVariable(float3, texcoord, attribute texcoord, );
 rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, );
 rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 
-static __device__ float3 cylindernormal(float t) //float t, float3 t0, float3 t1)
-{
-  return t;
+//static __device__ float3 cylindernormal(float t) //float t, float3 t0, float3 t1)
+//{
+//  return t;
   //float3 neg = make_float3(t==t0.x?1:0, t==t0.y?1:0, t==t0.z?1:0);
   //float3 pos = make_float3(t==t1.x?1:0, t==t1.y?1:0, t==t1.z?1:0);
   //return pos-neg;
-}
+//}
 
 /*
  * Cylinder Intersection
@@ -251,5 +251,5 @@ RT_PROGRAM void intersect(int) {
 RT_PROGRAM void bounds (int, float result[6])
 {
   optix::Aabb* aabb = (optix::Aabb*)result;
-  aabb->set(cylinder_min, cylinder_max);
+  aabb->set(cylinder_p, cylinder_q);
 }
