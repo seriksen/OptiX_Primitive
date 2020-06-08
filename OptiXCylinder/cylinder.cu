@@ -230,7 +230,7 @@ RT_PROGRAM void intersect(int) {
         rtReportIntersection(0);
       }
     }
-    else if( ad1 < 0.f && PCAP ) //  intersection outside cylinder on P side
+    else if( ad1 < 0.f ) //  intersection outside cylinder on P side
     {
       if( nd <= 0.f ) return ; // ray direction away from endcap
       float t = -md/nd ;   // P endcap
@@ -244,7 +244,7 @@ RT_PROGRAM void intersect(int) {
         }
       }
     }
-    else if( ad1 > dd && QCAP  ) //  intersection outside cylinder on Q side
+    else if( ad1 > dd  ) //  intersection outside cylinder on Q side
     {
       if( nd >= 0.f ) return ; // ray direction away from endcap
       float t = (dd-md)/nd ;   // Q endcap
@@ -276,7 +276,7 @@ RT_PROGRAM void intersect(int) {
         rtReportIntersection(0);
       }
     }
-    else if( ad2 < 0.f && PCAP ) //  intersection from inside to P endcap
+    else if( ad2 < 0.f ) //  intersection from inside to P endcap
     {
       float t = -md/nd ;   // P endcap
       float checkr = k + t*(2.f*mn + t*nn) ; // bracket typo in book 2*t*t makes no sense
@@ -289,7 +289,7 @@ RT_PROGRAM void intersect(int) {
         }
       }
     }
-    else if( ad2 > dd  && QCAP ) //  intersection from inside to Q endcap
+    else if( ad2 > dd ) //  intersection from inside to Q endcap
     {
       float t = (dd-md)/nd ;   // Q endcap
       float checkr = k + dd - 2.0f*md + t*(2.f*(mn-nd)+t*nn) ;
