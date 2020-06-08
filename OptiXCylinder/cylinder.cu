@@ -16,7 +16,7 @@ rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 
 static __device__ float3 cylindernormal() //float t, float3 t0, float3 t1)
 {
-  return make_float3(0f,0f,0f);
+  return make_float3(0.f,0.f,0.f);
   //float3 neg = make_float3(t==t0.x?1:0, t==t0.y?1:0, t==t0.z?1:0);
   //float3 pos = make_float3(t==t1.x?1:0, t==t1.y?1:0, t==t1.z?1:0);
   //return pos-neg;
