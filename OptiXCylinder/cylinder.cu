@@ -68,7 +68,7 @@ RT_PROGRAM void intersect(int)
   float3 n = ray.direction;
 
   // Other vars
-  bool hasIntersect{false};
+  bool hasIntersect = false;
   bool check_second = true;
 
   // Calculate dot products
@@ -154,7 +154,6 @@ RT_PROGRAM void intersect(int)
     if (rtPotentialIntersection(t)) {
       texcoord = make_float3( 0.0f );
       shading_normal = geometric_normal = cylindernormal(); //cylindernormal(t, p_loc, q_loc);
-      printf(t);
       rtReportIntersection(0);
       }
     }
