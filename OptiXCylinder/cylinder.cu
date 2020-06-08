@@ -81,7 +81,7 @@ RT_PROGRAM void intersect(int)
   float k = mm - r*r;
   float c = dd * k - md * md;
   float t;
-
+  float3 forshading = normalise(make_float3(0.f,0.f, q_loc.z - p_loc.z));
 
   // Test if fully outside endcaps of cylinder
   if (md < 0.0f && md + nd < 0.0f) {
@@ -153,7 +153,7 @@ RT_PROGRAM void intersect(int)
   if (hasIntersect) {
     if (rtPotentialIntersection(t)) {
       texcoord = make_float3( 0.0f );
-      shading_normal = geometric_normal = cylindernormal(t, p_loc, q_loc);
+      shading_normal = geometric_normal = forshading; //cylindernormal(t, p_loc, q_loc);
       rtReportIntersection(0);
       }
     }
