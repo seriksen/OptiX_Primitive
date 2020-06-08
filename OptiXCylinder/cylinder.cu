@@ -14,11 +14,12 @@ rtDeclareVariable(float3, texcoord, attribute texcoord, );
 rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, );
 rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 
-static __device__ float3 cylindernormal(float t, float3 t0, float3 t1)
+static __device__ float3 cylindernormal() //float t, float3 t0, float3 t1)
 {
-  float3 neg = make_float3(t==t0.x?1:0, t==t0.y?1:0, t==t0.z?1:0);
-  float3 pos = make_float3(t==t1.x?1:0, t==t1.y?1:0, t==t1.z?1:0);
-  return pos-neg;
+  return make_float3(1.0f,1.0f,1.0f);
+  //float3 neg = make_float3(t==t0.x?1:0, t==t0.y?1:0, t==t0.z?1:0);
+  //float3 pos = make_float3(t==t1.x?1:0, t==t1.y?1:0, t==t1.z?1:0);
+  //return pos-neg;
 }
 
 // cylinder intersection
@@ -152,7 +153,7 @@ RT_PROGRAM void intersect(int)
   if (hasIntersect) {
     if (rtPotentialIntersection(t)) {
       texcoord = make_float3( 0.0f );
-      shading_normal = geometric_normal = make_float(1.0f,1.0f,1.0f); //cylindernormal(t, p_loc, q_loc);
+      shading_normal = geometric_normal = cylindernormal(); //cylindernormal(t, p_loc, q_loc);
       rtReportIntersection(0);
       }
     }
