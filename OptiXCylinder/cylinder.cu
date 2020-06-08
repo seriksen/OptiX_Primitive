@@ -243,7 +243,7 @@ RT_PROGRAM void intersect(int) {
       }
   }
 
-  // TODO: add second root?
+  // FIXME: add second root
   return;
 
 }
