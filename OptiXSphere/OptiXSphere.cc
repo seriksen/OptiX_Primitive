@@ -161,10 +161,10 @@ optix::GeometryInstance createSphere(optix::Context context,
                                     const char* primitive_ptx)
 {
   optix::Geometry sphere;
-  assert(box.get() == NULL);
+  assert(sphere.get() == NULL);
 
   sphere = context->createGeometry();
-  assert(box.get() != NULL);
+  assert(sphere.get() != NULL);
 
   // The box geometry only has one primitive = box.cu
   sphere->setPrimitiveCount(1u);
