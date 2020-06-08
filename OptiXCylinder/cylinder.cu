@@ -8,7 +8,7 @@ using namespace optix;
 // Communication Variables
 rtDeclareVariable(float3, cylinder_p, , );
 rtDeclareVariable(float3, cylinder_q, , );
-rtDeclareVariable(float3, cylinder_r, , );
+rtDeclareVariable(float4, cylinder_r, , );
 rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
 rtDeclareVariable(float3, texcoord, attribute texcoord, );
 rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, );
@@ -151,7 +151,7 @@ RT_PROGRAM void intersect(int) {
     return;
 
   // More dot products
-  float nn = dot(n,n)
+  float nn = dot(n,n);
   float mn = dot(m,n);
   float mm = dot(m,m);
   float a = dd * nn - nd * nd;
