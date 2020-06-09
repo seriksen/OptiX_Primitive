@@ -238,7 +238,7 @@ RT_PROGRAM void intersect(int) {
     if( rtPotentialIntersection(t_root1) )
     {
       // Intersection relative to P
-      float3 N  = (root1_pos - p)  ;
+      float3 N  = (root1_pos - p)/r  ;
       N.z = 0.f ;
       shading_normal = geometric_normal = -normalize(N) ;
       rtReportIntersection(0);
