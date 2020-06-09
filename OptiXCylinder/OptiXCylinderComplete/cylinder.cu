@@ -220,6 +220,7 @@ RT_PROGRAM void intersect(int) {
   // Define some more things
   float disc = b * b - a * c;
   float t_root1;
+  float t_root2;
   float radius_check;
 
   // Has no roots and no intersection
