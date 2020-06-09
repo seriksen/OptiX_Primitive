@@ -222,7 +222,7 @@ RT_PROGRAM void intersect(int) {
   {
     if( rtPotentialIntersection(t_root1) )
     {
-      shading_normal = geometric_normal = -normalize(d) ;
+      shading_normal = geometric_normal = normalize(d) ;
       rtReportIntersection(0);
     }
   }
