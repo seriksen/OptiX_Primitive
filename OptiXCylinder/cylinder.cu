@@ -43,6 +43,11 @@ rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
  * (v - w) . (v - w) - r2 = 0 (eq 1)
  * where;
  * v = X - P, d = Q - P, w = ((v.d)/(d.d)) . d
+ * In words;
+ * - v = Distance between intersection point and point P
+ * - d = height of cylinder (the axis for the calculations)
+ * - w = distance of v along d axis
+ *
  *
  * Intersection
  *       +---------+             L(t) = A + t(B-A)
@@ -56,6 +61,9 @@ rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
  * (n.n - (n.d)^2 / (d.d))t^2 + 2(m.n - (n.d)(m.d)/(d.d))t
  *  + m.m - (m.d)^2 / (d.d) - r^2 = 0
  * Where m = A - P and n = B - A (from v = L(t) - P)
+ * In words;
+ * - n = ray direction
+ * - m = ray position relative to point P
  *
  * This is what needs to be solved
  *
@@ -85,6 +93,7 @@ rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
  *  - Two roots
  *  - root1 (smaller) = value where line enters cylinder
  *  - root2 (larger) = value where line exists cylinder
+ *  - Can get away with only calculating one here
  *
  * Ray could intersect with endcaps (P and Q)
  *
@@ -214,7 +223,6 @@ RT_PROGRAM void intersect(int) {
   // Define some more things
   float disc = b*b - a*c;
   float t_root1;
-  float t_root2;
   float radius_check;
 
   // Has no roots and no intersection
@@ -270,53 +278,7 @@ RT_PROGRAM void intersect(int) {
       }
     }
   }
-
   return;
-
-  /*
-  t_root2 = (-b + sqrtf(disc))/a;     // far root : means are inside (always?)
-  float3 root2_pos = ray.origin + t_root2*ray.direction ;
-
-  // Intersection inside cylinder
-  if( md + t_root2 * nd > 0.f && md + t_root2 * nd < dd )
-  {
-    if( rtPotentialIntersection(t_root2) )
-    {
-      float3 N  = (root2_pos - p)/r  ;
-      N.z = 0.f ;
-
-      shading_normal = geometric_normal = -normalize(N) ;
-      rtReportIntersection(0);
-    }
-  }
-  // Intersection inside at P
-  else if( md + t_root2 * nd < 0.f )
-  {
-    t = -md/nd ;   // P endcap
-    radius_check = (mm - r*r) + t*(2.f*mn + t*nn);
-    if ( radius_check < 0.f )
-    {
-      if( rtPotentialIntersection(t) )
-      {
-        shading_normal = geometric_normal = normalize(d);
-        rtReportIntersection(0);
-      }
-    }
-  }
-  // Intersection inside at Q
-  else if( md + t_root2 * nd > dd)
-  {
-    t = (dd-md)/nd ;   // Q endcap
-    radius_check = (mm - r*r) + dd - 2.0f*md + t*(2.f*(mn-nd)+t*nn) ;
-    if ( radius_check < 0.f )
-    {
-      if( rtPotentialIntersection(t) )
-      {
-        shading_normal = geometric_normal = -normalize(d) ;
-        rtReportIntersection(0);
-      }
-    }
-  } */
 }
 
 RT_PROGRAM void bounds (int, float result[6])
