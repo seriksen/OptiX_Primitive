@@ -271,6 +271,7 @@ RT_PROGRAM void intersect(int) {
     }
   }
 
+  return;
 
   t_root2 = (-b + sqrtf(disc))/a;     // far root : means are inside (always?)
   float3 root2_pos = ray.origin + t_root2*ray.direction ;
@@ -316,46 +317,6 @@ RT_PROGRAM void intersect(int) {
     }
   }
 }
-/*
-  // Intersection on P side
-  if (md + t * nd < 0.f) {
-    // Ray is going away from endcap
-    if (nd <= 0.f) return;
-
-    t = -md/nd; // P endcap
-    radius_check = mm -r*r + t * (2.f * mn + t*nn);
-    if (radius_check <= 0.f) {
-      if (rtPotentialIntersection(t)) {
-        shading_normal = geometric_normal = -normalize(d);
-        rtReportIntersection(0);
-      }
-    }
-  }
-  // Intersection on Q side
-  else if (md + t * nd > dd) {
-    // Ray is going away from endcap
-    if (nd >= 0.f) return;
-
-    t = (dd - md) / nd; // Q endcap
-    radius_check = mm - r*r + t * (2.f * (mn - nd) + t * nn);
-    if (radius_check <= 0.f) {
-      if (rtPotentialIntersection(t)) {
-        shading_normal = geometric_normal = normalize(d);
-      }
-    }
-  }
-  // ray intersects cylinder between the end caps
-  else {
-      if (rtPotentialIntersection(t)) {
-        shading_normal = geometric_normal = normalize(d);
-      }
-  }
-
-  // FIXME: add second root
-  return;
-
-}
- */
 
 RT_PROGRAM void bounds (int, float result[6])
 {
