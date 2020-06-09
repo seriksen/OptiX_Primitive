@@ -1,7 +1,7 @@
 #include <optix.h>
+#include <optixu/optixu_aabb_namespace.h>
 #include <optixu/optixu_math_namespace.h>
 #include <optixu/optixu_matrix_namespace.h>
-#include <optixu/optixu_aabb_namespace.h>
 
 using namespace optix;
 
@@ -16,12 +16,13 @@ rtDeclareVariable(float3, texcoord, attribute texcoord, );
 rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, );
 rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 
-//static __device__ float3 cylindernormal(float t) //float t, float3 t0, float3 t1)
+// static __device__ float3 cylindernormal(float t) //float t, float3 t0, float3
+// t1)
 //{
 //  return t;
-  //float3 neg = make_float3(t==t0.x?1:0, t==t0.y?1:0, t==t0.z?1:0);
-  //float3 pos = make_float3(t==t1.x?1:0, t==t1.y?1:0, t==t1.z?1:0);
-  //return pos-neg;
+// float3 neg = make_float3(t==t0.x?1:0, t==t0.y?1:0, t==t0.z?1:0);
+// float3 pos = make_float3(t==t1.x?1:0, t==t1.y?1:0, t==t1.z?1:0);
+// return pos-neg;
 //}
 
 /*
@@ -131,6 +132,9 @@ rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
  * - endcaps
  *   - check for intersection with P and Q if ray origin is outside cylinder
  *
+ * What's not included
+ * - t root 2 (larger root)
+ * - Case where Ray origin is inside cylinder (endcaps)
  */
 RT_PROGRAM void intersect(int) {
   // Cylinder properties from RT variables
@@ -139,7 +143,7 @@ RT_PROGRAM void intersect(int) {
   float3 q = cylinder_q;
   float r = cylinder_r.w;
 
-  float3 d = make_float3(0.f,0.f,q.z - p.z); // cylinder z
+  float3 d = make_float3(0.f, 0.f, q.z - p.z); // cylinder z
 
   // Ray information
   float3 m = ray.origin - p; // ray origin relative to P
@@ -147,17 +151,17 @@ RT_PROGRAM void intersect(int) {
   float t;
 
   // Initial dot products
-  float mm = dot(m,m);
-  float nn = dot(n,n);
-  float dd = dot(d,d);
-  float md = dot(m,d);
-  float nd = dot(n,d);
-  float mn = dot(m,n);
+  float mm = dot(m, m);
+  float nn = dot(n, n);
+  float dd = dot(d, d);
+  float md = dot(m, d);
+  float nd = dot(n, d);
+  float mn = dot(m, n);
 
   // at^2 + bt + c = 0
   float a = dd * nn - nd * nd;
   float b = dd * mn - nd * md;
-  float c = dd * (mm - r*r) - md * md;
+  float c = dd * (mm - r * r) - md * md;
 
   //***************
   // Test Endcaps
@@ -206,56 +210,52 @@ RT_PROGRAM void intersect(int) {
   //************************
 
   // Define some more things
-  float disc = b*b - a*c;
+  float disc = b * b - a * c;
   float t_root1;
   float radius_check;
 
   // Has no roots and no intersection
-  if (disc < 0.f) return;
+  if (disc < 0.f)
+    return;
 
   // root 1
   t_root1 = (-b - sqrtf(disc)) / a;
-  float3 root1_pos = ray.origin + t_root1*ray.direction ;
+  float3 root1_pos = ray.origin + t_root1 * ray.direction;
 
   // Intersection inside cylinder
-  if ( md + t_root1 * nd > 0.f && md + t_root1 * nd < dd )
-  {
-    if( rtPotentialIntersection(t_root1) )
-    {
-      shading_normal = geometric_normal = normalize(d) ;
+  if (md + t_root1 * nd > 0.f && md + t_root1 * nd < dd) {
+    if (rtPotentialIntersection(t_root1)) {
+      shading_normal = geometric_normal = normalize(d);
       rtReportIntersection(0);
     }
   }
   // Intersection outside cylinder P side
-  else if ( md + t_root1 * nd < 0.f )
-  {
+  else if (md + t_root1 * nd < 0.f) {
     // Ray is going away from endcap
-    if (nd <= 0.f) return;
+    if (nd <= 0.f)
+      return;
 
-    t = -md/nd ;   // P endcap
-    radius_check =  (mm - r*r) + t*(2.f*mn + t*nn);
-    if ( radius_check < 0.f )
-    {
-      if( rtPotentialIntersection(t) )
-      {
+    t = -md / nd; // P endcap
+    radius_check = (mm - r * r) + t * (2.f * mn + t * nn);
+    if (radius_check < 0.f) {
+      if (rtPotentialIntersection(t)) {
         shading_normal = geometric_normal = normalize(d);
         rtReportIntersection(0);
       }
     }
   }
   // Intersection outside cylinder Q side
-  else if( md + t_root1 * nd > dd )
-  {
+  else if (md + t_root1 * nd > dd) {
     // Ray is going away from endcap
-    if( nd >= 0.f ) return;
+    if (nd >= 0.f)
+      return;
 
-    t = (dd-md)/nd ;   // Q endcap
-    radius_check = (mm - r*r) + dd - 2.0f*md + t*(2.f*(mn-nd)+t*nn) ;
-    if ( radius_check < 0.f )
-    {
-      if( rtPotentialIntersection(t) )
-      {
-        shading_normal = geometric_normal = -normalize(d)  ;
+    t = (dd - md) / nd; // Q endcap
+    radius_check =
+        (mm - r * r) + dd - 2.0f * md + t * (2.f * (mn - nd) + t * nn);
+    if (radius_check < 0.f) {
+      if (rtPotentialIntersection(t)) {
+        shading_normal = geometric_normal = -normalize(d);
         rtReportIntersection(0);
       }
     }
@@ -263,8 +263,7 @@ RT_PROGRAM void intersect(int) {
   return;
 }
 
-RT_PROGRAM void bounds (int, float result[6])
-{
-  optix::Aabb* aabb = (optix::Aabb*)result;
+RT_PROGRAM void bounds(int, float result[6]) {
+  optix::Aabb *aabb = (optix::Aabb *)result;
   aabb->set(cylinder_min, cylinder_max);
 }
