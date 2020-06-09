@@ -220,7 +220,6 @@ RT_PROGRAM void intersect(int) {
 
   // root 1
   t_root1 = (-b - sqrtf(disc)) / a;
-  float3 root1_pos = ray.origin + t_root1 * ray.direction;
 
   // Intersection inside cylinder
   if (md + t_root1 * nd > 0.f && md + t_root1 * nd < dd) {
