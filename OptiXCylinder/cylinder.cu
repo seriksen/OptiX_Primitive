@@ -174,13 +174,14 @@ RT_PROGRAM void intersect(int) {
   if (fabs(a) < 1e-6f) {
 
     // outside of cylinder
-    if (c > 0.f) return;
+    if (c > 0.f)
+      return;
 
     // If still in, means ray intersects
 
     // Intersects P endcap
     if (md < 0.f) {
-      t = - mn / nn;
+      t = -mn / nn;
       if (rtPotentialIntersection(t)) {
         shading_normal = geometric_normal = normalize(d);
         rtReportIntersection(0);
@@ -195,26 +196,10 @@ RT_PROGRAM void intersect(int) {
       }
     }
     // Ray origin is inside cylinder
-    else { return;}/*
-      // Ray intersects P from inside
-      if (nd > 0.f) {
-        t = -mn / nn;
-        if (rtPotentialIntersection(t)) {
-          shading_normal = geometric_normal = normalize(d);
-          rtReportIntersection(0);
-        }
-      }
-      // Ray intersects Q from inside
-      else {
-        t = (nd - mn) / nn;
-        if (rtPotentialIntersection(t)) {
-          shading_normal = geometric_normal = normalize(d);
-          rtReportIntersection(0);
-        }
-      }
+    else {
+      return;
     }
-      return;*/
-    }
+  }
 
   //************************
   // Test Infinite Cylinder
@@ -270,7 +255,7 @@ RT_PROGRAM void intersect(int) {
     {
       if( rtPotentialIntersection(t) )
       {
-        shading_normal = geometric_normal = normalize(d)  ;
+        shading_normal = geometric_normal = -normalize(d)  ;
         rtReportIntersection(0);
       }
     }
