@@ -195,7 +195,7 @@ RT_PROGRAM void intersect(int) {
       }
     }
     // Ray origin is inside cylinder
-    else {
+    else { return;}/*
       // Ray intersects P from inside
       if (nd > 0.f) {
         t = -mn / nn;
@@ -213,7 +213,7 @@ RT_PROGRAM void intersect(int) {
         }
       }
     }
-      return;
+      return;*/
     }
 
   //************************
