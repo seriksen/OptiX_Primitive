@@ -182,7 +182,7 @@ RT_PROGRAM void intersect(int) {
     if (md < 0.f) {
       t = - mn / nn;
       if (rtPotentialIntersection(t)) {
-        shading_normal = geometric_normal = -normalize(d);
+        shading_normal = geometric_normal = normalize(d);
         rtReportIntersection(0);
       }
     }
@@ -237,9 +237,6 @@ RT_PROGRAM void intersect(int) {
   {
     if( rtPotentialIntersection(t_root1) )
     {
-      // Intersection relative to P
-      float3 N  = (root1_pos - p);
-      N.z = 0.f ;
       shading_normal = geometric_normal = -normalize(d) ;
       rtReportIntersection(0);
     }
