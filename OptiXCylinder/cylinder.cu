@@ -273,6 +273,7 @@ RT_PROGRAM void intersect(int) {
 
   return;
 
+  /*
   t_root2 = (-b + sqrtf(disc))/a;     // far root : means are inside (always?)
   float3 root2_pos = ray.origin + t_root2*ray.direction ;
 
@@ -315,7 +316,7 @@ RT_PROGRAM void intersect(int) {
         rtReportIntersection(0);
       }
     }
-  }
+  } */
 }
 
 RT_PROGRAM void bounds (int, float result[6])
