@@ -240,7 +240,7 @@ RT_PROGRAM void intersect(int) {
       // Intersection relative to P
       float3 N  = (root1_pos - p)/r  ;
       N.z = 0.f ;
-      shading_normal = geometric_normal = normalize(d) ;
+      shading_normal = geometric_normal = -normalize(d) ;
       rtReportIntersection(0);
     }
   }
