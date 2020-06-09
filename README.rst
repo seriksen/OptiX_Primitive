@@ -33,7 +33,8 @@ OptiX Primitives
 There are two Primitives shown in this repository.
 
 1. Box (OptiXBox)
-2. Cylinder
+2. Sphere (OptiXSphere)
+3. Cylinder (OptiXCylinder)
 
 Run scripts are in the directories
 
@@ -43,7 +44,13 @@ This has been copied from Opticks (TODO: add link).
 
 The expected output is OptiXBox.ppm
 
+OptiXSphere
+~~~~~~~~~~~
+Uses sphere.cu defined in OptiX tests
+
 OptiXCylinder
 ~~~~~~~~~~~~~
+Has two versions; simple and complete.
+Needs work on colours defined from normals as both are identical atm in view.
 
 
