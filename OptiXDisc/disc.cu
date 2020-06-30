@@ -50,7 +50,7 @@ RT_PROGRAM void intersect(int) {
   float root1 = t_center - t_delta ;
   float root2 = t_center + t_delta ;   // root2 > root1
 
-  float t_cand = ( rsq < rr && rsq > ii ) ? ( root1 > t_min ? root1 : root2 ) : t_min ;
+  float t_cand = ( rsq < rr) ? ( root1 > t_min ? root1 : root2 ) : t_min ;
 
   //float side = md + t_cand*nd ;
 
