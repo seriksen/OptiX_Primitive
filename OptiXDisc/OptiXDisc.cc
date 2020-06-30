@@ -160,37 +160,34 @@ optix::GeometryInstance createCylinder(optix::Context context,
                                        const char *ptx,
                                        const char* primitive_ptx)
 {
-  optix::Geometry cylinder;
-  assert(cylinder.get() == NULL);
+  optix::Geometry geometry;
+  assert(geometry.get() == NULL);
 
-  cylinder = context->createGeometry();
-  assert(cylinder.get() != NULL);
+  geometry = context->createGeometry();
+  assert(geometry.get() != NULL);
 
   // The box geometry only has one primitive = box.cu
-  cylinder->setPrimitiveCount(1u);
+  geometry->setPrimitiveCount(1u);
 
   // Get box primitive bounds from PTX file
   // See box_bounds in box.cu
-  cylinder->setBoundingBoxProgram(
+  geometry->setBoundingBoxProgram(
       context->createProgramFromPTXFile(primitive_ptx, "bounds"));
 
   // Get box primitive intersection from PTX file
   // See box_intersect in box.cu
-  cylinder->setIntersectionProgram(
+  geometry->setIntersectionProgram(
       context->createProgramFromPTXFile(primitive_ptx, "intersect"));
 
   // Set box size
   float sz = ce.w;
-  cylinder["cylinder_p"]->setFloat(0.f, 0.f, -sz / 2.f);
-  cylinder["cylinder_q"]->setFloat(0.f, 0.f, sz / 2.f);
-  cylinder["cylinder_r"]->setFloat(0.f,0.f,0.f, 0.1f);
-  cylinder["cylinder_min"]->setFloat(-0.5f,-0.5f,-0.5f);
-  cylinder["cylinder_max"]->setFloat(0.5f,0.5f,0.5f);
-
+  geometry["disc_shape"]->setFloat(0.f, 0.f, 0.f, 0.2f);
+  geometry["disc_min"]->setFloat(-0.5f,-0.5f,-0.5f);
+  geometry["disc_max"]->setFloat(0.5f,0.5f,0.5f);
 
   // Put it all together
   optix::GeometryInstance gi =
-      context->createGeometryInstance(cylinder, &material, &material + 1);
+      context->createGeometryInstance(geometry, &material, &material + 1);
 
   return gi;
 }
