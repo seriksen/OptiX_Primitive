@@ -188,9 +188,9 @@ optix::GeometryInstance createDisc(optix::Context context,
   // Set disc size
   float sz = ce.w;
   rtDeclareVariable(float4, disc_center, , );
-  rtDeclareVaribale(float3, disc_props, , );
+  rtDeclareVaribale(float3, disc_propers, , );
   disc["disc_center"]->setFloat(-sz / 2.f, -sz / 2.f, -sz / 2.f, 0.1f);
-  disc["disc_props"]->setFloat(0.01f, 0.01f, 0.0f);
+  disc["disc_propers"]->setFloat(0.01f, 0.01f, 0.0f);
 
   // Put it all together
   optix::GeometryInstance gi =

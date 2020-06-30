@@ -7,7 +7,7 @@ using namespace optix; // Not actually used anywhere here?
 
 // OptiX Communication Variables
 rtDeclareVariable(float4, disc_center, , );
-rtDeclareVaribale(float3, disc_props, , );
+rtDeclareVaribale(float3, disc_propers, , );
 rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
 rtDeclareVariable(float3, texcoord, attribute texcoord, );
 rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, );
@@ -19,8 +19,8 @@ RT_PROGRAM void intersect(int)
   // Declare local variables
   float radius = disc_center.w;
   float3 center = make_float3(disc_center.x, disc_center.y, disc_center.z);
-  float z1 = disc_prop.x;
-  float z2 = disc_prop.y;
+  float z1 = disc_propers.x;
+  float z2 = disc_propers.y;
   float zc = (z1 + z2)/2.f;
   float dz = (z1 - z2)/2.f;
   float3 m = ray.origin - center;
@@ -52,7 +52,7 @@ RT_PROGRAM void intersect(int)
 
 RT_PROGRAM void bounds (int, float result[6])
 {
-  float3 disc_p = disc_props;
+  float3 disc_p = disc_propers;
   float4 disc_c = disc_center;
 
   float3 bbmin = make_float3(disc_c.x - disc_c.w,
