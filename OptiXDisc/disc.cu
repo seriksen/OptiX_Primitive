@@ -22,8 +22,8 @@ RT_PROGRAM void intersect(int) {
   float z1 = 0.01f;
   float z2 = -0.01f;
   //float zc = (z1 + z2) / 2.f;
-  float radius = 0.1f;
-  float inner = 0.01; // ? what is this?
+  float radius = 0.2f;
+  float inner = 0.0f; // ? what is this?
   float zdelta = (z2 - z1) / 2.f;
   float3 center = make_float3(0.f,0.f,0.f);
 
