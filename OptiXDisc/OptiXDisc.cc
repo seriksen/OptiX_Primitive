@@ -17,17 +17,6 @@
  * limitations under the License.
  */
 
-/**
-UseOptiXGeometry
-===================
-
-Minimally demonstrate OptiX geometry without using OXRAP.
-
-* "standalone" ray traces a box using a normal shader
-
-
-**/
-
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -154,7 +143,7 @@ optix::Material createMaterial(optix::Context context,
                                const char  *ptx,
                                const char *closest_hit,
                                unsigned entry_point_index
-                               )
+)
 {
   optix::Material mat = context->createMaterial();
   mat->setClosestHitProgram(
@@ -165,36 +154,43 @@ optix::Material createMaterial(optix::Context context,
 }
 
 
-optix::GeometryInstance createDisc(optix::Context context,
-                                  optix::Material material,
-                                  glm::vec4 ce,
-                                  const char *ptx,
-                                  const char* primitive_ptx)
+optix::GeometryInstance createCylinder(optix::Context context,
+                                       optix::Material material,
+                                       glm::vec4 ce,
+                                       const char *ptx,
+                                       const char* primitive_ptx)
 {
-  optix::Geometry disc;
-  assert(disc.get() == NULL);
+  optix::Geometry cylinder;
+  assert(cylinder.get() == NULL);
 
-  disc = context->createGeometry();
-  assert(disc.get() != NULL);
+  cylinder = context->createGeometry();
+  assert(cylinder.get() != NULL);
 
-  disc->setPrimitiveCount(1u);
+  // The box geometry only has one primitive = box.cu
+  cylinder->setPrimitiveCount(1u);
 
-  disc->setBoundingBoxProgram(
+  // Get box primitive bounds from PTX file
+  // See box_bounds in box.cu
+  cylinder->setBoundingBoxProgram(
       context->createProgramFromPTXFile(primitive_ptx, "bounds"));
 
-  disc->setIntersectionProgram(
+  // Get box primitive intersection from PTX file
+  // See box_intersect in box.cu
+  cylinder->setIntersectionProgram(
       context->createProgramFromPTXFile(primitive_ptx, "intersect"));
 
-  // Set disc size
+  // Set box size
   float sz = ce.w;
-  rtDeclareVariable(float4, disc_center, , );
-  rtDeclareVaribale(float4, disc_propers, , );
-  disc["disc_center"]->setFloat(-sz / 2.f, -sz / 2.f, -sz / 2.f, 0.1f);
-  disc["disc_propers"]->setFloat(0.01f, 0.01f, 0.0f, 0.0f);
+  cylinder["cylinder_p"]->setFloat(0.f, 0.f, -sz / 2.f);
+  cylinder["cylinder_q"]->setFloat(0.f, 0.f, sz / 2.f);
+  cylinder["cylinder_r"]->setFloat(0.f,0.f,0.f, 0.1f);
+  cylinder["cylinder_min"]->setFloat(-0.5f,-0.5f,-0.5f);
+  cylinder["cylinder_max"]->setFloat(0.5f,0.5f,0.5f);
+
 
   // Put it all together
   optix::GeometryInstance gi =
-      context->createGeometryInstance(disc, &material, &material + 1);
+      context->createGeometryInstance(cylinder, &material, &material + 1);
 
   return gi;
 }
@@ -203,8 +199,8 @@ optix::GeometryInstance createDisc(optix::Context context,
 int main(int argc, char **argv) {
 
   // Set/Get names
-  const char *name = "OptiXBox";
-  const char *primitive = "box";
+  const char *name = "OptiXCylinderSimple";
+  const char *primitive = "cylinder";
   const char *prefix = getenv("PREFIX");
   assert(prefix && "expecting PREFIX envvar pointing to writable directory");
 
@@ -233,8 +229,8 @@ int main(int argc, char **argv) {
                                             "closest_hit_radiance0",
                                             entry_point_index);
 
-  optix::GeometryInstance gi = createDisc(context, material, ce, ptx,
-                                         primitive_ptx);
+  optix::GeometryInstance gi = createCylinder(context, material, ce, ptx,
+                                              primitive_ptx);
 
 
   optix::GeometryGroup gg = context->createGeometryGroup();
