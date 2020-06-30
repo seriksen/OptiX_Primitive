@@ -51,6 +51,12 @@ Uses sphere.cu defined in OptiX tests
 OptiXCylinder
 ~~~~~~~~~~~~~
 Has two versions; simple and complete.
-Needs work on colours defined from normals as both are identical atm in view.
+
+Simple: Has as little defined as possible to see the cylinder
+
+Complete: Has the complete interception maths of the cylinder.
+
+In both cases the colours are set so that the sides of the cylinder are set to one colour and the top/bottom another.
+
 
 

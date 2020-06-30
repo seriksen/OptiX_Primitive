@@ -169,6 +169,12 @@ RT_PROGRAM void intersect(int) {
   //***************
   // Test Endcaps
   //***************
+  // 4 Possibilities
+  // 1. Ray would intercept below P -> doesn't hit cylinder
+  // 2. Ray would intercept above Q -> doesn't hit cylinder
+  // 3. Ray is parallel with cylinder -> could hit cylinder
+  // 4. Ray could intercept sides instead -> see testing infinite cylinder case
+
 
   // Below P
   if (md < 0.0f && md + nd < 0.0f)
@@ -180,7 +186,7 @@ RT_PROGRAM void intersect(int) {
   // If a is parallel to cylinder
   if (fabs(a) < 1e-6f) {
 
-    // outside of cylinder
+    // outside of cylinder so wont hit endcaps
     if (c > 0.f)
       return;
 
@@ -280,7 +286,7 @@ RT_PROGRAM void intersect(int) {
       rtReportIntersection(0);
     }
   }
-    // Intersection outside cylinder P side
+  // Intersection outside cylinder P side
   else if (md + t_root2 * nd < 0.f) {
     // Ray is going away from endcap
     if (nd <= 0.f)
@@ -295,7 +301,7 @@ RT_PROGRAM void intersect(int) {
       }
     }
   }
-    // Intersection outside cylinder Q side
+  // Intersection outside cylinder Q side
   else if (md + t_root2 * nd > dd) {
     // Ray is going away from endcap
     if (nd >= 0.f)
