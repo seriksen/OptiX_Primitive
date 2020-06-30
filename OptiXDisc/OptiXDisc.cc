@@ -181,7 +181,7 @@ optix::GeometryInstance createCylinder(optix::Context context,
 
   // Set box size
   float sz = ce.w;
-  geometry["disc_shape"]->setFloat(0.f, 0.f, 0.f, 0.2f);
+  geometry["disc_shape"]->setFloat(0.f, 0.f, 0.f, 0.5f);
   geometry["disc_min"]->setFloat(-0.5f,-0.5f,-0.5f);
   geometry["disc_max"]->setFloat(0.5f,0.5f,0.5f);
 
