@@ -27,6 +27,9 @@ RT_PROGRAM void intersect(int) {
   float3 d = make_float3(0.f,0.f,1.f); // normal
   float rr = radius*radius;
   float hole_rr = hole_radius * hole_radius;
+  float z1 = disc_min.x;
+  float z2 = disc_max.x;
+  float zdelta = (z2 - z1)/2.f;
 
   float mm = dot(m, m) ;
   float nn = dot(n, n) ;
@@ -38,9 +41,12 @@ RT_PROGRAM void intersect(int) {
 
   float t_center = -md/nd ;
   float rsq = t_center*(2.f*mn + t_center*nn) + mm;
+  float t_delta  = nd < 0.f ? -zdelta/nd : zdelta/nd ;
 
+  float root1 = t_center - t_delta ;
+  float root2 = t_center + t_delta ;   // root2 > root1
   // TODO let hole not be in center
-  float t_cand = ( rsq < rr && rsq > hole_rr) ? t_center : t_min ;
+  float t_cand = ( rsq < rr && rsq > hole_rr ) ? ( root1 > t_min ? root1 : root2 ) : t_min ;
 
   bool valid_isect = t_cand > t_min ;
   if(valid_isect) {
