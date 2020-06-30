@@ -19,8 +19,8 @@ rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 
 RT_PROGRAM void intersect(int) {
 
-  float z1 = 0.01f;
-  float z2 = -0.01f;
+  float z1 = 0.0f;
+  float z2 = 0.0f;
   //float zc = (z1 + z2) / 2.f;
   float radius = 0.2f;
   float inner = 0.0f; // ? what is this?
