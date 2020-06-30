@@ -21,10 +21,10 @@ RT_PROGRAM void intersect(int) {
 
   float z1 = 0.01f;
   float z2 = -0.01f;
-  float zc = (z1 + z2) / 2.f;
+  //float zc = (z1 + z2) / 2.f;
   float radius = 0.1f;
   float inner = 0.01; // ? what is this?
-  float dz = (z2 - z1) / 2.f;
+  float zdelta = (z2 - z1) / 2.f;
   float3 center = make_float3(0.f,0.f,0.f);
 
   float3 m = ray.origin - center;
@@ -52,7 +52,7 @@ RT_PROGRAM void intersect(int) {
 
   float t_cand = ( rsq < rr && rsq > ii ) ? ( root1 > t_min ? root1 : root2 ) : t_min ;
 
-  float side = md + t_cand*nd ;
+  //float side = md + t_cand*nd ;
 
   bool valid_isect = t_cand > t_min ;
   if(valid_isect) {
