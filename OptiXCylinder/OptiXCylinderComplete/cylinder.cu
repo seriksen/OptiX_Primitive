@@ -175,7 +175,6 @@ RT_PROGRAM void intersect(int) {
   // 3. Ray is parallel with cylinder -> could hit cylinder
   // 4. Ray could intercept sides instead -> see testing infinite cylinder case
 
-
   // Below P
   if (md < 0.0f && md + nd < 0.0f)
     return;
