@@ -44,7 +44,7 @@ RT_PROGRAM void intersect(int) {
   float hole_md = dot(hole_m, d);
   float hole_mm = dot(hole_m, hole_m);
   float hole_mn = dot(hole_m, n);
-  float hole_t_center = -md/nd;
+  float hole_t_center = -hole_md/nd;
   float hole_rsq = hole_t_center*(2.f*hole_mn + hole_t_center*nn) + hole_mm;
 
   // TODO let hole not be in center
