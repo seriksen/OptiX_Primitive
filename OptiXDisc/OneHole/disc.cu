@@ -50,7 +50,7 @@ RT_PROGRAM void intersect(int) {
   // TODO let hole not be in center
   float t_cand = t_min;
   if ( rsq < rr ) {
-      if(hole_rsq > hole_rr) {
+      if(hole_rsq > hole_rr && rsq > hole_rr) {
         t_cand = hole_t_center;
       }
   }
