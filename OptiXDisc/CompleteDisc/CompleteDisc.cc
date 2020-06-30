@@ -196,7 +196,7 @@ optix::GeometryInstance createCylinder(optix::Context context,
 int main(int argc, char **argv) {
 
   // Set/Get names
-  const char *name = "OptiXDisc";
+  const char *name = "CompleteDisc";
   const char *primitive = "disc";
   const char *prefix = getenv("PREFIX");
   assert(prefix && "expecting PREFIX envvar pointing to writable directory");
