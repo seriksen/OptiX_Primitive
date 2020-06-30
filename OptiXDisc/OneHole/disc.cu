@@ -39,8 +39,16 @@ RT_PROGRAM void intersect(int) {
   float t_center = -md/nd ;
   float rsq = t_center*(2.f*mn + t_center*nn) + mm;
 
+  // check hole center now
+  float3 hole_m = ray.origin - hole_center;
+  float hole_md = dot(hole_m, d);
+  float hole_mm = dot(hole_m, hole_m);
+  float hole_mn = dot(hole_m, n);
+  float hole_t_center = -md/nd;
+  float hole_rsq = hole_t_center*(2.f*hole_mn + hole_t_center*nn) + hole_mm;
+
   // TODO let hole not be in center
-  float t_cand = ( rsq < rr && rsq > hole_rr) ? t_center : t_min ;
+  float t_cand = ( rsq < rr && hole_rsq > hole_rr) ? t_center : t_min ;
 
   bool valid_isect = t_cand > t_min ;
   if(valid_isect) {
