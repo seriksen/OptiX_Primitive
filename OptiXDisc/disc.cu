@@ -36,7 +36,7 @@ RT_PROGRAM void intersect(int) {
   float t_center = -md/nd ;
   float rsq = t_center*(2.f*mn + t_center*nn) + mm;
 
-  float t_cand = ( rsq < rr) ? root : t_min ;
+  float t_cand = ( rsq < rr) ? t_center : t_min ;
 
   bool valid_isect = t_cand > t_min ;
   if(valid_isect) {
