@@ -194,7 +194,7 @@ optix::GeometryInstance createDisc(optix::Context context,
 
   // Put it all together
   optix::GeometryInstance gi =
-      context->createGeometryInstance(box, &material, &material + 1);
+      context->createGeometryInstance(disc, &material, &material + 1);
 
   return gi;
 }
