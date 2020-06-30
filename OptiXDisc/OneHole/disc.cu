@@ -48,7 +48,12 @@ RT_PROGRAM void intersect(int) {
   float hole_rsq = hole_t_center*(2.f*hole_mn + hole_t_center*nn) + hole_mm;
 
   // TODO let hole not be in center
-  float t_cand = ( rsq < rr && hole_rsq > hole_rr) ? t_center : t_min ;
+  float t_cand = t_min;
+  if ( rsq < rr ) {
+      if(hole_rsq > hole_rr) {
+        t_cand = hole_t_center;
+      }
+  }
 
   bool valid_isect = t_cand > t_min ;
   if(valid_isect) {
