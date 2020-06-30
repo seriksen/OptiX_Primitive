@@ -19,10 +19,12 @@ RT_PROGRAM void intersect(int)
   // Declare local variables
   float radius = disc_center.w;
   float3 center = make_float3(disc_center.x, disc_center.y, disc_center.z);
+  float z1 = disc_prop.x;
+  float z2 = disc_prop.y;
   float zc = (z1 + z2)/2.f;
   float dz = (z1 - z2)/2.f;
-  float3 m = ray_origin - center;
-  float3 n == ray_direction;
+  float3 m = ray.origin - center;
+  float3 n = ray.direction;
   float3 d = make_float3(0.f, 0.f, 1.0f);
   float mm = dot(m,m);
   float nn = dot(n,n);
@@ -30,6 +32,7 @@ RT_PROGRAM void intersect(int)
   float md = dot(m,d);
   float mn = dot(m,n);
   float rr = radius * radius;
+  float ii = 0.000001f;
 
   float t_c = -md/nd;
   float rsq = t_c * (2.f * mn + t_c * nn) + mm;
