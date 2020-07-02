@@ -18,13 +18,47 @@ rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 
 RT_PROGRAM void intersect(int) {
 
-  float radius = disc_shape.w;
-  float3 center = make_float3(disc_shape.x,disc_shape.y,disc_shape.z);
-  float3 hole_center = make_float3(disc_hole.x, disc_hole.y, disc_hole.z);
-  float hole_radius = disc_hole.w;
-  float3 m = ray.origin - center;
-  float3 n = ray.direction;
-  float3 d = make_float3(0.f,0.f,1.f); // normal
+  /*
+   * for disc
+   *                 ^ n
+   *         i       |
+   * --------*-------C--------------------
+   *       d/        |----------r-------->|
+   *       /
+   *      * O
+   *
+   * Ray direction = d
+   * Ray origin = O
+   * disc centre = C
+   * disc radius = r
+   *
+   * ray position = ray origin + time * ray direction
+   * -> r(t) = O + t * d
+   *
+   * Ray intersects plane which disc is in if
+   * (r(t) - C) . n = 0
+   *
+   * Ray hits disc is in plane and within radius
+   * r(t) - C < r
+   * -> (r(t) - C)^2 < r^2 (so handles both directions)
+   *
+   * t = (ray origin - disc centre) / ray direction  in normalised plane
+   * -> t = (O - C).n / d.n
+   */
+
+  // Disc properties
+  float r = disc_shape.w;
+  float3 c = make_float3(disc_shape.x,disc_shape.y,disc_shape.z);
+  float3 n = make_float3(0.f,0.f,1.f); // normal
+
+  // Hole properties
+  float3 hole_c = make_float3(disc_hole.x, disc_hole.y, disc_hole.z);
+  float hole_r = disc_hole.w;
+
+  // ray properties
+  float3 o = ray.origin;
+  float3 d = ray.direction;
+
   float rr = radius*radius;
   float hole_rr = hole_radius * hole_radius;
 
@@ -34,6 +68,7 @@ RT_PROGRAM void intersect(int) {
   float md = dot(m, d) ;
   float mn = dot(m, n) ;
 
+  // Remove tmin?
   float t_min = 0.f;
 
   float t_center = -md/nd ;

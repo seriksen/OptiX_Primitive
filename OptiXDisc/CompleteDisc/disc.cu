@@ -17,33 +17,55 @@ rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 
 RT_PROGRAM void intersect(int) {
 
-  float radius = disc_shape.w;
-  float3 center = make_float3(disc_shape.x,disc_shape.y,disc_shape.z);
 
-  float3 m = ray.origin - center;
-  float3 n = ray.direction;
-  float3 d = make_float3(0.f,0.f,1.f); // normal
+  /*
+   * for disc
+   *                 ^ n
+   *         i       |
+   * --------*-------C--------------------
+   *       d/        |----------r-------->|
+   *       /
+   *      * O
+   *
+   * Ray direction = d
+   * Ray origin = O
+   * disc centre = C
+   * disc radius = r
+   *
+   * ray position = ray origin + time * ray direction
+   * -> r(t) = O + t * d
+   *
+   * Ray intersects plane which disc is in if
+   * (r(t) - C) . n = 0
+   *
+   * Ray hits disc is in plane and within radius
+   * r(t) - C < r
+   * -> (r(t) - C)^2 < r^2 (so handles both directions)
+   *
+   * t = (ray origin - disc centre) / ray direction  in normalised plane
+   * -> t = (O - C).n / d.n
+   */
+
+  // Disc properties
+  float r = disc_shape.w;
+  float3 c = make_float3(disc_shape.x,disc_shape.y,disc_shape.z);
+  float3 n = make_float3(0.f,0.f,1.f); // normal
+
+  // ray properties
+  float3 d = ray.direction;
+  float3 o = ray.origin;
   float rr = radius*radius;
 
-  float mm = dot(m, m) ;
-  float nn = dot(n, n) ;
-  float nd = dot(n, d) ;   // >0 : ray direction in same hemi as normal
-  float md = dot(m, d) ;
-  float mn = dot(m, n) ;
+  // t
+  float t = dot((o - c), n) / dot(d, n);
 
-  float t_min = 0.f;
+  // check if intersects
+  float rt_sqrt = dot((o + t * d - c), n)*dot((o + t * d - c), n);
+  float rr = r*r;
 
-  float t_center = -md/nd ;
-  float rsq = t_center*(2.f*mn + t_center*nn) + mm;
-
-  float t_cand = ( rsq < rr) ? t_center : t_min ;
-
-  bool valid_isect = t_cand > t_min ;
-  if(valid_isect) {
-    if( rtPotentialIntersection( t_cand ) ) {
-      shading_normal = geometric_normal = normalize(d);
-      rtReportIntersection(0);
-        }
+  if ( rtPotentialIntersection(t) ) {
+    shading_normal = geometric_normal = normalize(n);
+    rtReportIntersection(0);
   }
   return;
 }
