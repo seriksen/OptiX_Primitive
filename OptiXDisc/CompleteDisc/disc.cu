@@ -54,7 +54,6 @@ RT_PROGRAM void intersect(int) {
   // ray properties
   float3 d = ray.direction;
   float3 o = ray.origin;
-  float rr = r*r;
 
   // t
   float t = dot((o - c), n) / dot(d, n);
