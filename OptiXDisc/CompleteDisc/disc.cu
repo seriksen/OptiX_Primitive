@@ -43,7 +43,7 @@ RT_PROGRAM void intersect(int) {
    * -> (r(t) - C)^2 < r^2 (so handles both directions)
    *
    * t = (ray origin - disc centre) / ray direction  in normalised plane
-   * -> t = (O - C).n / d.n
+   * -> t = - (O - C).n / d.n
    */
 
   // Disc properties
