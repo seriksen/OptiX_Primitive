@@ -56,7 +56,7 @@ RT_PROGRAM void intersect(int) {
   float3 o = ray.origin;
 
   // t
-  float t = - dot((o - c), n) / dot(d, n);
+  float t = dot((o - c), n) / dot(d, n);
 
   // check if intersects
   //float rt_sqrt = dot((o + t * d - c), n)*dot((o + t * d - c), n);
