@@ -62,7 +62,7 @@ RT_PROGRAM void intersect(int) {
   float rt_sqrt = dot((o + t * d - c), n)*dot((o + t * d - c), n);
   float rr = r*r;
 
-  if (rt_sqrt < rr) {
+  if (rt_sqrt < rr && t > 0.f) {
     if (rtPotentialIntersection(t)) {
       shading_normal = geometric_normal = normalize(n);
       rtReportIntersection(0);
