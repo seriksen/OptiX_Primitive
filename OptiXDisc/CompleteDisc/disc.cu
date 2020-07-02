@@ -54,7 +54,7 @@ RT_PROGRAM void intersect(int) {
   // ray properties
   float3 d = ray.direction;
   float3 o = ray.origin;
-  float rr = radius*radius;
+  float rr = r*r;
 
   // t
   float t = dot((o - c), n) / dot(d, n);
@@ -63,9 +63,11 @@ RT_PROGRAM void intersect(int) {
   float rt_sqrt = dot((o + t * d - c), n)*dot((o + t * d - c), n);
   float rr = r*r;
 
-  if ( rtPotentialIntersection(t) ) {
-    shading_normal = geometric_normal = normalize(n);
-    rtReportIntersection(0);
+  if (rt_sqrt < rr) {
+    if (rtPotentialIntersection(t)) {
+      shading_normal = geometric_normal = normalize(n);
+      rtReportIntersection(0);
+    }
   }
   return;
 }
