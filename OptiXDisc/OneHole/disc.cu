@@ -89,7 +89,7 @@ RT_PROGRAM void intersect(int) {
     // Now check hole
     float t_hole = - dot((o - hole_c), n) / dot(d, n);
     float r_sq_h = t_hole * (2.f * dot((o - hole_c), d) + t_hole * dot(d,d))
-                              + dot(o - hole_c,o - hole_c));
+                              + dot(o - hole_c,o - hole_c);
     float hole_rr = hole_r*hole_r;
     if (r_sq_h > hole_rr && t_hole > t_min) {
       if (rtPotentialIntersection(t)) {
