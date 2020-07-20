@@ -69,8 +69,6 @@ RT_PROGRAM void intersect(int) {
    * hole is in same plane so only need to worry about radius
    * this time
    * | i - C | > r to be outside of hole
-   *
-   *
    */
 
   // Disc properties
@@ -88,7 +86,7 @@ RT_PROGRAM void intersect(int) {
 
   // t
   float disc_t = dot((disc_c - ray_o), disc_n) / dot (ray_d,disc_n);
-  float t_min = 0.01f;
+  float t_min = 0.f;
 
   // check if intersects
   float disc_r_sq = disc_t * (2.f * dot((ray_o-disc_c), ray_d) + disc_t * dot(ray_d,ray_d))
@@ -98,7 +96,7 @@ RT_PROGRAM void intersect(int) {
   if (disc_r_sq < disc_rr && disc_t > t_min) {
     // Now check hole
     float hole_t = dot((hole_c - ray_o), disc_n) / dot(ray_d,disc_n);
-    float hole_r_sq = hole_t * (2.f * dot((ray_o - hole_c), ray_d) + hole_t * dot(ray_d,ray_d))
+    float hole_r_sq = hole_t * ( dot((ray_o - hole_c), ray_d) + hole_t * dot(ray_d,ray_d))
                               + dot(ray_o - hole_c,ray_o - hole_c);
     float hole_rr = hole_r*hole_r;
     if (hole_r_sq > hole_rr && hole_t > t_min) {
