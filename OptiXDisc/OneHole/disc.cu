@@ -88,7 +88,7 @@ RT_PROGRAM void intersect(int) {
 
   // t
   float disc_t = dot((disc_c - ray_o), disc_n) / dot (ray_d,disc_n);
-  float t_min = 0.f;
+  float t_min = 0.01f;
 
   // check if intersects
   float disc_r_sq = disc_t * (2.f * dot((ray_o-disc_c), ray_d) + disc_t * dot(ray_d,ray_d))
