@@ -101,7 +101,9 @@ RT_PROGRAM void intersect(int) {
                         dot(ray_o - hole_c, ray_o - hole_c);
       float hole_rr = hole_r * hole_r;
       if (hole_r_sq > hole_rr && hole_t > t_min) {
-        if (rtPotentialIntersection(disc_t)) {
+        if (disc_t > hole_t) float t = disc_t;
+        else float = hole_t;
+        if (rtPotentialIntersection(t)) {
           shading_normal = geometric_normal = normalize(disc_n);
           rtReportIntersection(0);
         }
