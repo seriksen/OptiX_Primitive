@@ -35,15 +35,25 @@ RT_PROGRAM void intersect(int) {
    * ray position = ray origin + time * ray direction
    * -> r(t) = O + t * d
    *
+   * Ray intercepts with Disc if
+   * 1. Is in plane
+   * 2. Is within disc radius
+   *
    * Ray intersects plane which disc is in if
    * (r(t) - C) . n = 0
    *
-   * Ray hits disc is in plane and within radius
-   * r(t) - C < r
+   * Ray is within radius if
+   * | i - C | < r
+   *
+   * Let r(t) = i
+   *
+   * -> r(t) - C < r
    * -> (r(t) - C)^2 < r^2 (so handles both directions)
    *
-   * t = (ray origin - disc centre) / ray direction  in normalised plane
-   * -> t = (O - C).n / d.n
+   * In that case, t must satisfy O + td - C = 0
+   *
+   * t = (disc centre - ray origin) / ray direction  in normalised plane
+   * -> t = - (O - C).n / d.n
    */
 
   // Disc properties
@@ -73,7 +83,7 @@ RT_PROGRAM void intersect(int) {
     float rt_sqrt_h = t_hole * (2.f * dot((o - hole_c), d) + t * dot(d,d) + dot(o-hole_c,o-hole_c));
     float hole_rr = hole_r*hole_r;
     if (rt_sqrt_h > hole_rr) {
-      if (rtPotentialIntersection(t)) {
+      if (rtPotentialIntersection(t_hole)) {
         shading_normal = geometric_normal = normalize(n);
         rtReportIntersection(0);
       }
