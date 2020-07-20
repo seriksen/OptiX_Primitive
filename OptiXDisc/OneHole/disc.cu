@@ -87,12 +87,12 @@ RT_PROGRAM void intersect(int) {
 
   if (r_sq < rr && t > t_min) {
     // Now check hole
-    float t_hole = - dot((o - hole_c), n) / dot(d,n);
+    float t_hole = dot((hole_c - o), n) / dot(d,n);
     float r_sq_h = t_hole * (2.f * dot((o - hole_c), d) + t_hole * dot(d,d))
                               + dot(o - hole_c,o - hole_c);
     float hole_rr = hole_r*hole_r;
     if (r_sq_h > hole_rr && t_hole > t_min) {
-      if (rtPotentialIntersection(t_hole)) {
+      if (rtPotentialIntersection(t)) {
         shading_normal = geometric_normal = normalize(n);
         rtReportIntersection(0);
       }
