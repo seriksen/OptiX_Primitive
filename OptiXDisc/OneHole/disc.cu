@@ -100,7 +100,7 @@ RT_PROGRAM void intersect(int) {
       float hole_r_sq = hole_t * (2.f * dot((ray_o - hole_c), ray_d) +
                                   hole_t * dot(ray_d, ray_d)) +
                         dot(ray_o - hole_c, ray_o - hole_c);
-      if (disc_c.x == disc_c.y) hole_r_sq = hole_r_sq / 2.f;
+      if (disc_c.x == disc_c.y) hole_r_sq = hole_r_sq * 2.f;
       float hole_rr = hole_r * hole_r;
       if (hole_r_sq > hole_rr && hole_t > t_min) {
         if (rtPotentialIntersection(disc_t)) {
