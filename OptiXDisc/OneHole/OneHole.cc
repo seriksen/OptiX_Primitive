@@ -185,7 +185,7 @@ optix::GeometryInstance createCylinder(optix::Context context,
   geometry["disc_shape"]->setFloat(0.f, 0.f, 0.f, 0.5f);
   geometry["disc_min"]->setFloat(-0.5f,-0.5f,-0.5f);
   geometry["disc_max"]->setFloat(0.5f,0.5f,0.5f);
-  geometry["disc_hole"]->setFloat(0.3f, 0.3f, 0.f, 0.1f);
+  geometry["disc_hole"]->setFloat(0.1f, 0.1f, 0.f, 0.1f);
   // Put it all together
   optix::GeometryInstance gi =
       context->createGeometryInstance(geometry, &material, &material + 1);
