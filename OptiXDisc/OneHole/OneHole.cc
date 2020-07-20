@@ -39,7 +39,7 @@ void getEyeUVW(const glm::vec4 &ce, const unsigned width, const unsigned height,
   // -tr);
 
   // View::getTransforms
-  glm::vec4 eye_m(0.0f, 0.0f, 2.f, 1.f); //  viewpoint in unit model frame
+  glm::vec4 eye_m(-1.0f, -1.0f, 1.f, 1.f); //  viewpoint in unit model frame
                                          // eye_m(-1.f, -1.f, 1.f, 1.f); //  viewpoint in unit model frame
   glm::vec4 look_m(0.f, 0.f, 0.f, 1.f);
   glm::vec4 up_m(0.f, 0.f, 1.f, 1.f);
