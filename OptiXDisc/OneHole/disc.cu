@@ -59,10 +59,10 @@ RT_PROGRAM void intersect(int) {
    * r_sq = (r(t) - c).(r(t) - c) < disc_rr
    * = (o + td - c).(o + td - c)
    * only care about n direction and let o - c = m
-   * = (m + tn) . (m + tn)
-   * = mm + 2tnm + ttnn
-   * = t (2nm + tnn) + mm
-   * = t (2n (o-c) + tnn) + (o-c)(o-c)
+   * = (m + td) . (m + td)
+   * = mm + 2tdm + ttdd
+   * = t (2dm + tdd) + mm
+   * = t (2d (o-c) + tdd) + (o-c)(o-c)
    * r_sq < disc_rr
    *
    * For the hole
@@ -94,15 +94,18 @@ RT_PROGRAM void intersect(int) {
   float disc_rr = disc_r*disc_r;
 
   if (disc_r_sq < disc_rr && disc_t > t_min) {
-    // Now check hole
-    float hole_t = dot((hole_c - ray_o), disc_n) / dot(ray_d,disc_n);
-    float hole_r_sq = hole_t * (2.f * dot((ray_o - hole_c), ray_d) + hole_t * dot(ray_d,ray_d))
-                              + dot(ray_o - hole_c,ray_o - hole_c);
-    float hole_rr = hole_r*hole_r;
-    if (hole_r_sq > hole_rr && hole_t > t_min) {
-      if (rtPotentialIntersection(hole_t)) {
-        shading_normal = geometric_normal = normalize(disc_n);
-        rtReportIntersection(0);
+    if (rtPotentialIntersection(disc_t)) {
+      // Now check hole
+      float hole_t = dot((hole_c - ray_o), disc_n) / dot(ray_d, disc_n);
+      float hole_r_sq = hole_t * (2.f * dot((ray_o - hole_c), ray_d) +
+                                  hole_t * dot(ray_d, ray_d)) +
+                        dot(ray_o - hole_c, ray_o - hole_c);
+      float hole_rr = hole_r * hole_r;
+      if (hole_r_sq > hole_rr && hole_t > t_min) {
+        if (rtPotentialIntersection(hole_t)) {
+          shading_normal = geometric_normal = normalize(disc_n);
+          rtReportIntersection(0);
+        }
       }
     }
   }
