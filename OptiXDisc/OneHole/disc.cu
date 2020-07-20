@@ -94,7 +94,6 @@ RT_PROGRAM void intersect(int) {
   float disc_rr = disc_r*disc_r;
 
   if (disc_r_sq < disc_rr && disc_t > t_min) {
-    if (rtPotentialIntersection(disc_t)) {
       // Now check hole
       float hole_t = dot((hole_c - ray_o), disc_n) / dot(ray_d, disc_n);
       float hole_r_sq = hole_t * (2.f * dot((ray_o - hole_c), ray_d) +
@@ -102,12 +101,11 @@ RT_PROGRAM void intersect(int) {
                         dot(ray_o - hole_c, ray_o - hole_c);
       float hole_rr = hole_r * hole_r;
       if (hole_r_sq > hole_rr && hole_t > t_min) {
-        if (rtPotentialIntersection(hole_t)) {
+        if (rtPotentialIntersection(disc_t)) {
           shading_normal = geometric_normal = normalize(disc_n);
           rtReportIntersection(0);
         }
       }
-    }
   }
   return;
 }
