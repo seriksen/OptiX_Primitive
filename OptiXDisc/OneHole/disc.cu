@@ -54,46 +54,57 @@ RT_PROGRAM void intersect(int) {
    *
    * t = (disc centre - ray origin) / ray direction  in normalised plane
    * -> t = (C - o) / d   . n (for normalised plane)
+   *
+   * So ray intercepts disc if...
+   * r_sq = (r(t) - c).(r(t) - c) < disc_rr
+   * = (o + td - c).(o + td - c)
+   * only care about n direction and let o - c = m
+   * = (m + tn) . (m + tn)
+   * = mm + 2tnm + ttnn
+   * = t (2nm + tnn) + mm
+   * = t (2n (o-c) + tnn) + (o-c)(o-c)
+   * r_sq < disc_rr
+   *
+   * For the hole
+   * hole is in same plane so only need to worry about radius
+   * this time
+   * | i - C | > r to be outside of hole
+   *
+   *
    */
 
   // Disc properties
-  float r = disc_shape.w;
-  float3 c = make_float3(disc_shape.x,disc_shape.y,disc_shape.z);
-  float3 n = make_float3(0.f,0.f,1.f); // normal
+  float disc_r = disc_shape.w;
+  float3 disc_c = make_float3(disc_shape.x,disc_shape.y,disc_shape.z);
+  float3 disc_n = make_float3(0.f,0.f,1.f); // normal
 
   // Hole properties
   float3 hole_c = make_float3(disc_hole.x, disc_hole.y, disc_hole.z);
   float hole_r = disc_hole.w;
 
   // ray properties
-  float3 d = ray.direction;
-  float3 o = ray.origin;
+  float3 ray_d = ray.direction;
+  float3 ray_o = ray.origin;
 
   // t
-  float t = dot((c - o), n) / dot (d,n);
+  float disc_t = dot((disc_c - ray_o), disc_n) / dot (ray_d,disc_n);
   float t_min = 0.f;
 
   // check if intersects
-  // r_sq = (r(t) - c).(r(t) - c) < disc_rr
-  // = (o + td - c).(o + td - c)
-  // only care about n direction and let o - c = m
-  // = (m + tn) . (m + tn)
-  // = mm + 2tnm + ttnn
-  // = t (2nm + tnn) + mm
-  // = t (2n (o-c) + tnn) + (o-c)(o-c)
+  float disc_r_sq = disc_t * (2.f * dot((ray_o-disc_c), ray_d) + disc_t * dot(ray_d,ray_d))
+               + dot(ray_o-disc_c,ray_o-disc_c);
+  float disc_rr = disc_r*disc_r;
 
-  float r_sq = t * (2.f * dot((o-c), d) + t * dot(d,d)) + dot(o-c,o-c);
-  float rr = r*r;
-
-  if (r_sq < rr && t > t_min) {
+  if (disc_r_sq < disc_rr && disc_t > t_min) {
+    t_min = disc_t;
     // Now check hole
-    float t_hole = dot((hole_c - o), n) / dot(d,n);
-    float r_sq_h = t_hole * (2.f * dot((o - hole_c), d) + t_hole * dot(d,d))
-                              + dot(o - hole_c,o - hole_c);
+    float hole_t = dot((hole_c - ray_o), disc_n) / dot(ray_d,disc_n);
+    float hole_r_sq = t_hole * (2.f * dot((ray_o - hole_c), ray_d) + hole_t * dot(ray_d,ray_d))
+                              + dot(ray_o - hole_c,ray_o - hole_c);
     float hole_rr = hole_r*hole_r;
-    if (r_sq_h > hole_rr && t_hole > t_min) {
-      if (rtPotentialIntersection(t)) {
-        shading_normal = geometric_normal = normalize(n);
+    if (hole_r_sq > hole_rr && hole_t > t_min) {
+      if (rtPotentialIntersection(t_min)) {
+        shading_normal = geometric_normal = normalize(disc_n);
         rtReportIntersection(0);
       }
     }
