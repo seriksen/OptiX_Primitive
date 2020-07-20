@@ -59,7 +59,6 @@ RT_PROGRAM void intersect(int) {
   float t = - dot((o - c), n) / dot(d, n);
 
   // check if intersects
-  //float rt_sqrt = dot((o + t * d - c), n)*dot((o + t * d - c), n);
   float rt_sqrt = t * (2.f * dot((o-c), d) + t * dot(d,d)) + dot(o-c,o-c);
   float rr = r*r;
 

@@ -56,42 +56,28 @@ RT_PROGRAM void intersect(int) {
   float hole_r = disc_hole.w;
 
   // ray properties
-  float3 o = ray.origin;
   float3 d = ray.direction;
+  float3 o = ray.origin;
 
-  float rr = radius*radius;
-  float hole_rr = hole_radius * hole_radius;
-
-  float mm = dot(m, m) ;
-  float nn = dot(n, n) ;
-  float nd = dot(n, d) ;   // >0 : ray direction in same hemi as normal
-  float md = dot(m, d) ;
-  float mn = dot(m, n) ;
-
-  // Remove tmin?
+  // t
+  float t = - dot((o - c), n) / dot(d, n);
   float t_min = 0.f;
 
-  float t_center = -md/nd ;
-  float rsq = t_center*(2.f*mn + t_center*nn) + mm;
+  // check if intersects
+  float rt_sqrt = t * (2.f * dot((o-c), d) + t * dot(d,d)) + dot(o-c,o-c);
+  float rr = r*r;
 
-  // check hole center now
-  float3 hole_m = ray.origin - hole_center;
-  float hole_md = dot(hole_m, d);
-  float hole_mm = dot(hole_m, hole_m);
-  float hole_mn = dot(hole_m, n);
-  float hole_t_center = -hole_md/nd;
-  float hole_rsq = hole_t_center*(2.f*hole_mn + hole_t_center*nn) + hole_mm;
-
-  // TODO let hole not be in center
-  float t_cand = (rsq < rr && hole_rsq > hole_rr) ? t_center : t_min;
-
-
-  bool valid_isect = t_cand > t_min ;
-  if(valid_isect) {
-    if( rtPotentialIntersection( t_cand ) ) {
-      shading_normal = geometric_normal = normalize(d);
-      rtReportIntersection(0);
-        }
+  if (rt_sqrt < rr && t > t_min) {
+    // Now check hole
+    float t_hole = - dot((o - hole_c), n) / dot(d, n);
+    float rt_sqrt_h = t_hole * (2.f * dot((o - hole_c), d) + t * dot(d,d) + dot(o-hole_c,o-hole_c));
+    float hole_rr = hole_r*hole_r;
+    if (rt_sqrt > hole_rr && t_hole > t_min) {
+      if (rtPotentialIntersection(t)) {
+        shading_normal = geometric_normal = normalize(n);
+        rtReportIntersection(0);
+      }
+    }
   }
   return;
 }
