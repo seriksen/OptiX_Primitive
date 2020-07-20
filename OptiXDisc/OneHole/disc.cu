@@ -99,7 +99,7 @@ RT_PROGRAM void intersect(int) {
     t_min = disc_t;
     // Now check hole
     float hole_t = dot((hole_c - ray_o), disc_n) / dot(ray_d,disc_n);
-    float hole_r_sq = t_hole * (2.f * dot((ray_o - hole_c), ray_d) + hole_t * dot(ray_d,ray_d))
+    float hole_r_sq = hole_t * (2.f * dot((ray_o - hole_c), ray_d) + hole_t * dot(ray_d,ray_d))
                               + dot(ray_o - hole_c,ray_o - hole_c);
     float hole_rr = hole_r*hole_r;
     if (hole_r_sq > hole_rr && hole_t > t_min) {
