@@ -87,6 +87,7 @@ RT_PROGRAM void intersect(int) {
   // t
   float disc_t = dot((disc_c - ray_o), disc_n) / dot (ray_d,disc_n);
   float t_min = 0.f;
+  float t;
 
   // check if intersects
   float disc_r_sq = disc_t * (2.f * dot((ray_o-disc_c), ray_d) + disc_t * dot(ray_d,ray_d))
@@ -101,8 +102,8 @@ RT_PROGRAM void intersect(int) {
                         dot(ray_o - hole_c, ray_o - hole_c);
       float hole_rr = hole_r * hole_r;
       if (hole_r_sq > hole_rr && hole_t > t_min) {
-        if (disc_t > hole_t) float t = disc_t;
-        else float t = hole_t;
+        if (disc_t > hole_t) {t = disc_t;}
+        else {t = hole_t;}
         if (rtPotentialIntersection(t)) {
           shading_normal = geometric_normal = normalize(disc_n);
           rtReportIntersection(0);
