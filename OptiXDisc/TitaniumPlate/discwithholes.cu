@@ -98,7 +98,7 @@ RT_PROGRAM void intersect(int) {
       //float height{6.35}; // mm
       float correction_factor{disc_r / 779};
       hole_r = hole_r * correction_factor;
-      float TopPMTArrayXY[253][2] = { { 0, 0 },
+      float TopPMTArrayXY[1][2] = { { 0, 0 } }; /*,
                                      { 92, 0 },
                                      { 46, 79.674337 },
                                      { -46, 79.674337 },
@@ -350,9 +350,9 @@ RT_PROGRAM void intersect(int) {
                                      { 657.407722, -324.197605 },
                                      { 694.099786, -235.615124 },
                                      { 718.915611, -143.001204 },
-                                     { 731.430591, -47.940493 } };
+                                     { 731.430591, -47.940493 } }; */
 
-      for (int i = 0; i < 253; i++) {
+      for (int i = 0; i < 1; i++) {
         hole_c = make_float3(TopPMTArrayXY[i][0] * correction_factor,
                             TopPMTArrayXY[i][1] * correction_factor, 0.f);
 
