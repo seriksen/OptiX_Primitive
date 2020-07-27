@@ -35,6 +35,7 @@ There are two Primitives shown in this repository.
 1. Box (OptiXBox)
 2. Sphere (OptiXSphere)
 3. Cylinder (OptiXCylinder)
+4. Disc (OptiXDisc)
 
 Run scripts are in the directories
 
@@ -58,4 +59,8 @@ Complete: Has the complete interception maths of the cylinder.
 
 In both cases the colours are set so that the sides of the cylinder are set to one colour and the top/bottom another.
 
-
+OptiXDisc
+~~~~~~~~~
+Will have several version but currently only has one.
+This primitive is for a simplification of Cylinders -> when they can be 2D.
+Aim is to have Disc with multiple holes in it.

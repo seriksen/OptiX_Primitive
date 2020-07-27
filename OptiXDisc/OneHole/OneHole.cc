@@ -39,7 +39,8 @@ void getEyeUVW(const glm::vec4 &ce, const unsigned width, const unsigned height,
   // -tr);
 
   // View::getTransforms
-  glm::vec4 eye_m(-1.f, -1.f, 1.f, 1.f); //  viewpoint in unit model frame
+  glm::vec4 eye_m(0.00001f, 0.00001f, 2.f, 1.f); //  viewpoint in unit model frame
+                                         // eye_m(-1.f, -1.f, 1.f, 1.f); //  viewpoint in unit model frame
   glm::vec4 look_m(0.f, 0.f, 0.f, 1.f);
   glm::vec4 up_m(0.f, 0.f, 1.f, 1.f);
   glm::vec4 gze_m(look_m - eye_m);
@@ -184,7 +185,7 @@ optix::GeometryInstance createCylinder(optix::Context context,
   geometry["disc_shape"]->setFloat(0.f, 0.f, 0.f, 0.5f);
   geometry["disc_min"]->setFloat(-0.5f,-0.5f,-0.5f);
   geometry["disc_max"]->setFloat(0.5f,0.5f,0.5f);
-
+  geometry["disc_hole"]->setFloat(0.0f, 0.0f, 0.f, 0.1f);
   // Put it all together
   optix::GeometryInstance gi =
       context->createGeometryInstance(geometry, &material, &material + 1);
@@ -196,7 +197,7 @@ optix::GeometryInstance createCylinder(optix::Context context,
 int main(int argc, char **argv) {
 
   // Set/Get names
-  const char *name = "OptiXDisc";
+  const char *name = "OneHole";
   const char *primitive = "disc";
   const char *prefix = getenv("PREFIX");
   assert(prefix && "expecting PREFIX envvar pointing to writable directory");
