@@ -91,7 +91,7 @@ RT_PROGRAM void intersect(int) {
   if (disc_r_sq < disc_rr && disc_t > t_min) {
       // Now check holes
       float3 hole_c;
-      float hole_r{76 + 2}; // mm
+      float hole_r{(76 + 2)/2}; // mm
       float hole_t;
       float hole_r_sq;
       float hole_rr;
