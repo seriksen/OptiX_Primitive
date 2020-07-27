@@ -354,7 +354,7 @@ RT_PROGRAM void intersect(int) {
                                      { 731.430591, -47.940493 } };
 
       for (int i = 0; i < 253; i++) {
-        hole_c = make_float(TopPMTArrayXY[i][0] * correction_factor,
+        hole_c = make_float3(TopPMTArrayXY[i][0] * correction_factor,
                             TopPMTArrayXY[i][1] * correction_factor, 0.f);
 
         hole_t = dot((hole_c - ray_o), disc_n) / dot(ray_d, disc_n);

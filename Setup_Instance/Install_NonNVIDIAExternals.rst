@@ -20,6 +20,6 @@ Install CMake
     curl -L -O ${url}
     tar zxvf cmake-${cmake_ver}.tar.gz
     cd cmake-${cmake_ver}
-    ./bootstrap --prefix=
+    ./bootstrap
     gmake
     sudo make install
