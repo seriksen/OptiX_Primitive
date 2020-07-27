@@ -354,21 +354,23 @@ RT_PROGRAM void intersect(int) {
 
       for (int i = 0; i < 2; i++) {
         hole_c = make_float3(TopPMTArrayXY[i][0] * correction_factor,
-                            TopPMTArrayXY[i][1] * correction_factor, 0.f);
+                             TopPMTArrayXY[i][1] * correction_factor, 0.f);
 
         hole_t = dot((hole_c - ray_o), disc_n) / dot(ray_d, disc_n);
         hole_r_sq = hole_t * (2.f * dot((ray_o - hole_c), ray_d) +
                               hole_t * dot(ray_d, ray_d)) +
                     dot(ray_o - hole_c, ray_o - hole_c);
         hole_rr = hole_r * hole_r;
-        if (hole_r_sq > hole_rr) {
-
-
-
+        if (hole_r_sq < hole_rr) {
+          // invalid intersect
+          return;
+        }
+      }
+      // If not returned, intersect is valid
       if (rtPotentialIntersection(disc_t)) {
           shading_normal = geometric_normal = normalize(disc_n);
             rtReportIntersection(0);
-          }}}
+          }
   }
   return;
 }
