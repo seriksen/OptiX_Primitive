@@ -98,7 +98,7 @@ RT_PROGRAM void intersect(int) {
       //float height{6.35}; // mm
       float correction_factor{disc_r / 779};
       hole_r = hole_r * correction_factor;
-      float TopPMTArrayXY[2][2] = { { 0, 0 } },
+      float TopPMTArrayXY[2][2] = { { 0, 0 },
                                      { 92, 0 }}; /*,
                                      { 46, 79.674337 },
                                      { -46, 79.674337 },
