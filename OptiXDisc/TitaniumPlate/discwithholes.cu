@@ -361,14 +361,14 @@ RT_PROGRAM void intersect(int) {
                               hole_t * dot(ray_d, ray_d)) +
                     dot(ray_o - hole_c, ray_o - hole_c);
         hole_rr = hole_r * hole_r;
-        if (hole_r_sq < hole_rr && hole_t < t_min) {
-          return;
-        }
-      }
+        if (hole_r_sq > hole_rr && hole_t > t_min) {
+
+
+
       if (rtPotentialIntersection(disc_t)) {
           shading_normal = geometric_normal = normalize(disc_n);
             rtReportIntersection(0);
-          }
+          }}}
   }
   return;
 }
