@@ -91,12 +91,12 @@ RT_PROGRAM void intersect(int) {
   if (disc_r_sq < disc_rr && disc_t > t_min) {
       // Now check holes
       float3 hole_c;
-      float hole_r{7.6 + 0.2}; // cm
+      float hole_r{76 + 2}; // mm
       float hole_t;
       float hole_r_sq;
       float hole_rr;
-      //float height{0.635}; // cm
-      float correction_factor{disc_r / 77.9};
+      //float height{6.35}; // mm
+      float correction_factor{disc_r / 779};
       hole_r = hole_r * correction_factor;
       float TopPMTArrayXY[253][2] = { { 0, 0 },
                                      { 92, 0 },
