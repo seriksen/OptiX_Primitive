@@ -361,7 +361,7 @@ RT_PROGRAM void intersect(int) {
                               hole_t * dot(ray_d, ray_d)) +
                     dot(ray_o - hole_c, ray_o - hole_c);
         hole_rr = hole_r * hole_r;
-        if (hole_r_sq > hole_rr && hole_t > t_min) {
+        if (hole_r_sq > hole_rr) {
 
 
 
