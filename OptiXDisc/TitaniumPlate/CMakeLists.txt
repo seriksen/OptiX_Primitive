@@ -5,7 +5,7 @@ project(${name})
 #[=[
 Attempt to do the same as UseOptiXGeometry but without
 depending on an Opticks installation
-#]=]
+#] =]
 
 
 if(POLICY CMP0077)  # see notes/issues/cmake-3.13.4-FindCUDA-warnings.rst
@@ -74,5 +74,3 @@ target_link_libraries(${name} PUBLIC
 
 install(FILES ${_generated_PTX_files} DESTINATION ptx)
 install(TARGETS ${name}               DESTINATION bin)
-
-

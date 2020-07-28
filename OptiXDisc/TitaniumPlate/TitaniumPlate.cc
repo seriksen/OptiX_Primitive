@@ -39,8 +39,10 @@ void getEyeUVW(const glm::vec4 &ce, const unsigned width, const unsigned height,
   // -tr);
 
   // View::getTransforms
-  glm::vec4 eye_m(0.00001f, 0.00001f, 2.f, 1.f); //  viewpoint in unit model frame
-                                         // eye_m(-1.f, -1.f, 1.f, 1.f); //  viewpoint in unit model frame
+  glm::vec4 eye_m(
+      0.00001f, 0.00001f, 2.f,
+      1.f); //  viewpoint in unit model frame
+            // eye_m(-1.f, -1.f, 1.f, 1.f); //  viewpoint in unit model frame
   glm::vec4 look_m(0.f, 0.f, 0.f, 1.f);
   glm::vec4 up_m(0.f, 0.f, 1.f, 1.f);
   glm::vec4 gze_m(look_m - eye_m);
@@ -110,11 +112,8 @@ void SPPM_write(const char *filename, const unsigned char *image, int width,
   delete[] data;
 }
 
-optix::Context createContext(unsigned entry_point_index,
-                             const char* ptx,
-                             const char* raygen,
-                             const char* miss)
-{
+optix::Context createContext(unsigned entry_point_index, const char *ptx,
+                             const char *raygen, const char *miss) {
   optix::Context context = optix::Context::create();
 
   // Only need one type of array as only care about radiance
@@ -137,30 +136,22 @@ optix::Context createContext(unsigned entry_point_index,
                           context->createProgramFromPTXFile(ptx, miss));
 
   return context;
-
 }
 
-optix::Material createMaterial(optix::Context context,
-                               const char  *ptx,
+optix::Material createMaterial(optix::Context context, const char *ptx,
                                const char *closest_hit,
-                               unsigned entry_point_index
-)
-{
+                               unsigned entry_point_index) {
   optix::Material mat = context->createMaterial();
   mat->setClosestHitProgram(
-      entry_point_index,
-      context->createProgramFromPTXFile(ptx, closest_hit));
+      entry_point_index, context->createProgramFromPTXFile(ptx, closest_hit));
 
   return mat;
 }
 
-
 optix::GeometryInstance createCylinder(optix::Context context,
-                                       optix::Material material,
-                                       glm::vec4 ce,
+                                       optix::Material material, glm::vec4 ce,
                                        const char *ptx,
-                                       const char* primitive_ptx)
-{
+                                       const char *primitive_ptx) {
   optix::Geometry geometry;
   assert(geometry.get() == NULL);
 
@@ -183,15 +174,14 @@ optix::GeometryInstance createCylinder(optix::Context context,
   // Set box size
   float sz = ce.w;
   geometry["disc_shape"]->setFloat(0.f, 0.f, 0.f, 0.5f);
-  geometry["disc_min"]->setFloat(-0.5f,-0.5f,-0.5f);
-  geometry["disc_max"]->setFloat(0.5f,0.5f,0.5f);
+  geometry["disc_min"]->setFloat(-0.5f, -0.5f, -0.5f);
+  geometry["disc_max"]->setFloat(0.5f, 0.5f, 0.5f);
   // Put it all together
   optix::GeometryInstance gi =
       context->createGeometryInstance(geometry, &material, &material + 1);
 
   return gi;
 }
-
 
 int main(int argc, char **argv) {
 
@@ -219,16 +209,14 @@ int main(int argc, char **argv) {
   const char *ptx = PTXPath(prefix, cmake_target, name);
   const char *primitive_ptx = PTXPath(prefix, cmake_target, primitive);
 
-  optix::Context context = createContext(entry_point_index, ptx, "raygen",
-                                         "miss");
+  optix::Context context =
+      createContext(entry_point_index, ptx, "raygen", "miss");
 
-  optix::Material material = createMaterial(context, ptx,
-                                            "closest_hit_radiance0",
-                                            entry_point_index);
+  optix::Material material =
+      createMaterial(context, ptx, "closest_hit_radiance0", entry_point_index);
 
-  optix::GeometryInstance gi = createCylinder(context, material, ce, ptx,
-                                              primitive_ptx);
-
+  optix::GeometryInstance gi =
+      createCylinder(context, material, ce, ptx, primitive_ptx);
 
   optix::GeometryGroup gg = context->createGeometryGroup();
   gg->setChildCount(1);

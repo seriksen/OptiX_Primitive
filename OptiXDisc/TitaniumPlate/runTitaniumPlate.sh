@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/ bin / bash - l
 ##
 ## Copyright (c) 2019 Opticks Team. All Rights Reserved.
 ##
@@ -35,13 +35,21 @@ echo prefix $prefix
 
 
 
-glm-dir(){  echo $prefix/externals/glm/$(glm-name) ; }
-glm-version(){ echo 0.9.9.5 ; }
-glm-name(){    echo glm-$(glm-version) ; }
-glm-url(){    echo https://github.com/g-truc/glm/releases/download/$(glm-version)/$(glm-name).zip ; }
-glm-dist(){    echo $(dirname $(glm-dir))/$(basename $(glm-url)) ; }
+glm-dir(){
+  echo $prefix / externals / glm / $(glm - name); }
+glm-version(){
+  echo 0.9.9.5; }
+glm-name(){
+  echo glm - $(glm - version); }
+glm-url(){
+  echo https : // github.com/g-truc/glm/releases/download/$(glm-version)/$(glm-name).zip
+               // ; }
+               glm -
+               dist() {
+    echo $(dirname $(glm - dir)) / $(basename $(glm - url));
+  }
 
-glm-get(){
+  glm - get() {
    local msg="=== $FUNCNAME :"
    local dir=$(dirname $(glm-dir)) &&  mkdir -p $dir && cd $dir
    local url=$(glm-url)
@@ -58,48 +66,46 @@ glm-get(){
    [ ! -f "$hpp" ] && unzip $opt $zip -d $nam
    ln -sfnv $(glm-name)/glm glm
    echo symbolic link for access without version in path
-}
+  }
 
+glm -
+    get
 
-glm-get
+        echo "OPTIX_INSTALL_DIR: ${OPTIX_INSTALL_DIR}"
 
-echo "OPTIX_INSTALL_DIR: ${OPTIX_INSTALL_DIR}"
+    rm -
+    rf $bdir &&mkdir - p $bdir cd $bdir &&pwd ls -
+    l
 
-rm -rf $bdir && mkdir -p $bdir
-cd $bdir && pwd
-ls -l
+        echo "Running CMake" cmake $sdir -
+    DCMAKE_BUILD_TYPE =
+    Debug - DCMAKE_PREFIX_PATH =
+        $prefix / externals - DCMAKE_INSTALL_PREFIX =
+            $prefix - DCMAKE_MODULE_PATH =
+                ${OPTIX_INSTALL_DIR} / SDK / CMake - DOptiX_INSTALL_DIR =
+                    ${OPTIX_INSTALL_DIR}
 
-echo "Running CMake"
-cmake $sdir \
-   -DCMAKE_BUILD_TYPE=Debug \
-   -DCMAKE_PREFIX_PATH=$prefix/externals \
-   -DCMAKE_INSTALL_PREFIX=$prefix \
-   -DCMAKE_MODULE_PATH=${OPTIX_INSTALL_DIR}/SDK/CMake \
-   -DOptiX_INSTALL_DIR=${OPTIX_INSTALL_DIR}
+                    rm -
+                    rf $prefix / ptx rm - rf $prefix / bin rm -
+                    rf $prefix / ppm
 
+                                     mkdir -
+                    p $prefix / {ptx, bin, ppm} make make install
 
-rm -rf $prefix/ptx
-rm -rf $prefix/bin
-rm -rf $prefix/ppm
+                                    echo running
+                                    $(which $name) $name
 
-mkdir -p $prefix/{ptx,bin,ppm}
-make
-make install
+                                        rc = $
+    ? [!$rc - eq 0] &&echo non -
+          zero RC &&exit
 
-echo running $(which $name)
-$name
+              ppm = $prefix / ppm /
+                        $name.ppm
 
-rc=$?
-[ ! $rc -eq 0 ] && echo non-zero RC && exit
+                            [! - f "$ppm"] &&
+                    echo failed to write ppm $ppm &&
+                    exit
 
-
-ppm=$prefix/ppm/$name.ppm
-
-[ ! -f "$ppm" ] && echo failed to write ppm $ppm && exit
-
-
-echo ppm $ppm
-ls -l $ppm
-gio open $ppm    ## create an open function such as "gio open" if using gnome
-
-
+                            echo ppm $ppm ls -
+                        l $ppm gio open $ppm##create an open function such as
+                        "gio open" if using gnome
