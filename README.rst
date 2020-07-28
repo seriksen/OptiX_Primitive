@@ -61,6 +61,10 @@ In both cases the colours are set so that the sides of the cylinder are set to o
 
 OptiXDisc
 ~~~~~~~~~
-Will have several version but currently only has one.
-This primitive is for a simplification of Cylinders -> when they can be 2D.
-Aim is to have Disc with multiple holes in it.
+Has three versions
+
+Complete Disc: A disc
+
+One Hole: A disc with one hole in it
+
+Titanium Plate: A disc with many holes (200+)
